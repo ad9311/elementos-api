@@ -1,0 +1,6 @@
+# Local environment
+.env
+# Directories
+vendor/
+# Go files
+quick.go
