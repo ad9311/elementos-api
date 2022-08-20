@@ -16,12 +16,12 @@ func main() {
 		fmt.Println(err)
 	}
 
-	conn, err := db.New(config.DatabaseURL)
+	database, err := db.New(config.DatabaseURL)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	server.SetUp(config, conn)
+	server.SetUp(config, database)
 
 	err = server.New().ListenAndServe()
 	if err != nil {
