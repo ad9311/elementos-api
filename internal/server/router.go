@@ -7,6 +7,10 @@ import (
 	"github.com/go-chi/chi/middleware"
 )
 
+const (
+	login = "/login"
+)
+
 func routes() http.Handler {
 	mux := chi.NewRouter()
 
@@ -14,8 +18,10 @@ func routes() http.Handler {
 	// mux.Use(sessionsLoad)
 	// mux.Use(newCsrf)
 
-	// fileServer := http.FileServer(http.Dir("./web/static/"))
-	// mux.Handle("/static/*", http.StripPrefix("/static/", fileServer))
+	mux.Get(login, getLogin)
+
+	fileServer := http.FileServer(http.Dir("./web/static/"))
+	mux.Handle("/static/*", http.StripPrefix("/static/", fileServer))
 
 	return mux
 }
