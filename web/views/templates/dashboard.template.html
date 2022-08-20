@@ -8,6 +8,7 @@
 <main>
   {{ with .CurrentUser }}
     <h2>Hello {{ .FirstName }} {{ .LastName }}</h2>
+    <p>{{ .LastLogin }}</p>
   {{ end }}
   <p>Under construction...</p>
   <form action="/sign_out" method="post">
