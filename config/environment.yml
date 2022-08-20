@@ -1,7 +1,7 @@
 development:
   database_host: "localhost"
   database_port: "5432"
-  database_name: "elementos_manager_development"
+  database_name: "elementos_mgr_development"
   database_username: "${DATABASE_USERNAME}"
   database_password: "${DATABASE_PASSWORD}"
   server_port: "3000"
@@ -13,7 +13,7 @@ production:
 test:
   database_host: "localhost"
   database_port: "5432"
-  database_name: "elementos_manager_test"
+  database_name: "elementos_mgr_test"
   database_username: "${DATABASE_USERNAME}"
   database_password: "${DATABASE_PASSWORD}"
   server_port: "3001"
