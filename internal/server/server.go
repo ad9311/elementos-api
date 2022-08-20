@@ -19,6 +19,8 @@ type application struct {
 	templateCache map[string]*template.Template
 	StringMap     map[string]string
 	CSRFToken     string
+	sessionsData  *data
+	templateCache map[string]*template.Template
 }
 
 var app application
