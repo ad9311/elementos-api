@@ -2,14 +2,22 @@ package server
 
 import (
 	"database/sql"
+	"html/template"
 	"net/http"
 
 	"github.com/ad9311/elementos_mgr/internal/cfg"
 )
 
+type data struct {
+	StringMap map[string]string
+	CSRFToken string
+}
+
 type application struct {
-	config   *cfg.Config
-	database *sql.DB
+	config        *cfg.Config
+	database      *sql.DB
+	sessionsData  *data
+	templateCache map[string]*template.Template
 }
 
 var app application
