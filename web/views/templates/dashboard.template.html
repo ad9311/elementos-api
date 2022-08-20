@@ -6,9 +6,14 @@
   </div>
 </header>
 <main>
+  {{ with .CurrentUser }}
+    <h2>Hello {{.FirstName}} {{.LastName}}</h2>
+  {{ end }}
   <p>Under construction...</p>
   <form action="/logout" method="post">
-    <input type="hidden" id="csrf_token" name="csrf_token" value="{{.CSRFToken}}"/>
+    {{ with . }}
+      <input type="hidden" id="csrf_token" name="csrf_token" value="{{.CSRFToken}}"/>
+    {{ end }}
     <label for="submit">
       <input type="submit" id="submit" value="Logout"/>
     </label>

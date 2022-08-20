@@ -10,6 +10,9 @@ import (
 )
 
 type data struct {
+	CSRFToken   string
+	CurrentUser db.User
+	StringMap   map[string]string
 }
 
 type application struct {
@@ -17,9 +20,7 @@ type application struct {
 	database      *db.Database
 	session       *scs.SessionManager
 	templateCache map[string]*template.Template
-	StringMap     map[string]string
-	CSRFToken     string
-	CurrentUser   db.User
+	Data          data
 }
 
 var app application

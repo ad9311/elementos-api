@@ -25,7 +25,7 @@ func writeTemplate(w http.ResponseWriter, tmpl string) error {
 	}
 
 	buff := new(bytes.Buffer)
-	err = t.Execute(buff, app)
+	err = t.Execute(buff, app.Data)
 
 	_, err = buff.WriteTo(w)
 

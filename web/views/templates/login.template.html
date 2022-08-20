@@ -8,7 +8,9 @@
 <main>
   <div>
     <form action="/login" method="post">
-      <input type="hidden" id="csrf_token" name="csrf_token" value="{{.CSRFToken}}"/>
+      {{ with . }}
+        <input type="hidden" id="csrf_token" name="csrf_token" value="{{.CSRFToken}}"/>
+      {{ end }}
       <label for="username">
         <input type="text" id="username" name="username" placeholder="Username"/>
       </label>
