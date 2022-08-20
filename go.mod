@@ -8,8 +8,10 @@ require (
 )
 
 require (
+	github.com/alexedwards/scs/v2 v2.5.0
 	github.com/go-chi/chi v1.5.4
 	github.com/jackc/pgx/v4 v4.17.0
+	github.com/justinas/nosurf v1.1.1
 )
 
 require (

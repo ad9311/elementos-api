@@ -19,6 +19,7 @@ type Config struct {
 	DatabasePassword string `yaml:"database_password"`
 	DatabaseURL      string `yaml:"database_url"`
 	ServerPort       string `yaml:"server_port"`
+	SeverSecure      bool   `yaml:"server_secure"`
 	ServerCache      bool   `yaml:"server_cache"`
 }
 
