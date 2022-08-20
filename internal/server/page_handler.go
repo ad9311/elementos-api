@@ -8,56 +8,146 @@ import (
 )
 
 const (
-	loginTemplate     = "login.template.html"
+	signInTemplate    = "sign_in.template.html"
+	signUpTemplate    = "sign_up.template.html"
 	dashboardTemplate = "dashboard.template.html"
 )
 
+func getRoot(w http.ResponseWriter, r *http.Request) {
+	if userSignedIn(r) {
+		http.Redirect(w, r, dashboard, http.StatusSeeOther)
+	} else {
+		http.Redirect(w, r, signIn, http.StatusSeeOther)
+	}
+}
+
 func getDashboard(w http.ResponseWriter, r *http.Request) {
-	if userLoggedIn(r) {
+	if userSignedIn(r) {
 		app.Data.CSRFToken = nosurf.Token(r)
 		if err := writeTemplate(w, dashboardTemplate); err != nil {
 			fmt.Println(err)
 		}
 	} else {
-		http.Redirect(w, r, login, http.StatusSeeOther)
+		http.Redirect(w, r, signIn, http.StatusSeeOther)
 	}
 }
 
-func getLogin(w http.ResponseWriter, r *http.Request) {
-	if userLoggedIn(r) {
+func getSignIn(w http.ResponseWriter, r *http.Request) {
+	if userSignedIn(r) {
 		http.Redirect(w, r, dashboard, http.StatusSeeOther)
 	} else {
 		app.Data.CSRFToken = nosurf.Token(r)
-		if err := writeTemplate(w, loginTemplate); err != nil {
+		if err := writeTemplate(w, signInTemplate); err != nil {
 			fmt.Println(err)
 		}
 	}
 }
 
-func postLogin(w http.ResponseWriter, r *http.Request) {
+func postSignIn(w http.ResponseWriter, r *http.Request) {
 	fields := []string{"username", "password"}
 	err := validateForm(r, fields)
 	if err != nil {
 		fmt.Println(err)
-		http.Redirect(w, r, login, http.StatusSeeOther)
+		http.Redirect(w, r, signIn, http.StatusSeeOther)
 		return
 	}
 
-	user, err := app.database.GetUser(r)
+	user, err := app.database.SelectUserByUsername(r)
 	app.Data.CurrentUser = user
 	if err != nil {
 		fmt.Println(err)
-		http.Redirect(w, r, login, http.StatusSeeOther)
+		http.Redirect(w, r, signIn, http.StatusSeeOther)
+		return
+	}
+
+	err = validatePassword(r.PostFormValue("password"), user.EncryptedPassword)
+	if err != nil {
+		fmt.Println(err)
+		http.Redirect(w, r, signIn, http.StatusSeeOther)
+		return
+	}
+	user.EncryptedPassword = ""
+
+	err = app.database.UpdateLastLogin(user)
+	if err != nil {
+		fmt.Println(err)
+		http.Redirect(w, r, signIn, http.StatusSeeOther)
 		return
 	}
 
 	_ = app.session.RenewToken(r.Context())
-	app.session.Put(r.Context(), "login", true)
+	app.session.Put(r.Context(), "signedIn", true)
 	http.Redirect(w, r, dashboard, http.StatusSeeOther)
 }
 
-func postLogout(w http.ResponseWriter, r *http.Request) {
+func getSignUp(w http.ResponseWriter, r *http.Request) {
+	if userSignedIn(r) {
+		http.Redirect(w, r, dashboard, http.StatusSeeOther)
+	} else {
+		app.Data.CSRFToken = nosurf.Token(r)
+		if err := writeTemplate(w, signUpTemplate); err != nil {
+			fmt.Println(err)
+		}
+	}
+}
+
+func postSignUp(w http.ResponseWriter, r *http.Request) {
+	fields := []string{
+		"first-name",
+		"last-name",
+		"username",
+		"email",
+		"password",
+		"code",
+	}
+	err := validateForm(r, fields)
+	if err != nil {
+		fmt.Println(err)
+		http.Redirect(w, r, signUp, http.StatusSeeOther)
+		return
+	}
+
+	ic, err := app.database.SelectInvitationCode(r.PostFormValue("code"))
+	err2 := validateDate(ic.Validity)
+	if err != nil {
+		fmt.Println(err)
+		http.Redirect(w, r, signUp, http.StatusSeeOther)
+		return
+	} else if err2 != nil {
+		fmt.Println(err2)
+		http.Redirect(w, r, signUp, http.StatusSeeOther)
+		return
+	}
+
+	err = confirmPasswords(
+		r.PostFormValue("password"),
+		r.PostFormValue("password-confirmation"),
+	)
+	if err != nil {
+		fmt.Println(err)
+		http.Redirect(w, r, signUp, http.StatusSeeOther)
+		return
+	}
+
+	ep, err := encryptPassword(r.PostFormValue("password"))
+	if err != nil {
+		fmt.Println(err)
+		http.Redirect(w, r, signUp, http.StatusSeeOther)
+		return
+	}
+
+	err = app.database.InsertUser(r, ep)
+	if err != nil {
+		fmt.Println(err)
+		http.Redirect(w, r, signUp, http.StatusSeeOther)
+		return
+	}
+
+	http.Redirect(w, r, signIn, http.StatusSeeOther)
+}
+
+func postSignOut(w http.ResponseWriter, r *http.Request) {
 	_ = app.session.Destroy(r.Context())
 	_ = app.session.RenewToken(r.Context())
-	http.Redirect(w, r, "/login", http.StatusSeeOther)
+	http.Redirect(w, r, signIn, http.StatusSeeOther)
 }

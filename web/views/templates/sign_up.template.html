@@ -1,0 +1,44 @@
+{{ template "index" . }}
+{{ define "content" }}
+<header>
+  <div>
+    <h1>Elementos Manager</h1>
+  </div>
+</header>
+<main>
+  <div>
+    <form action="/sign_up" method="post">
+      {{ with . }}
+        <input type="hidden" id="csrf_token" name="csrf_token" value="{{.CSRFToken}}"/>
+      {{ end }}
+      <label for="first-name">
+        <input type="text" id="first-name" name="first-name" placeholder="First Name" required/>
+      </label>
+      <label for="last-name">
+        <input type="text" id="last-name" name="last-name" placeholder="Last Name" required/>
+      </label>
+      <label for="username">
+        <input type="text" id="username" name="username" placeholder="Username" required/>
+      </label>
+      <label for="email">
+        <input type="email" id="email" name="email" placeholder="Email" required/>
+      </label>
+      <label for="password">
+        <input type="password" id="password" name="password" placeholder="Password" required/>
+      </label>
+      <label for="password-confirmation">
+        <input type="password" id="password-confirmation" name="password-confirmation" placeholder="Password Confirmation" required/>
+      </label>
+      <label for="code">
+        <input type="text" id="code" name="code" placeholder="Invitation Code" required/>
+      </label>
+      <label for="submit">
+        <input type="submit" id="submit" value="Sign Up"/>
+      </label>
+    </form>
+  </div>
+  <div>
+    <a href="/sign_in">Sign In</a>
+  </div>
+</main>
+{{ end }}
