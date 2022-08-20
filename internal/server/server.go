@@ -10,8 +10,8 @@ import (
 )
 
 type data struct {
+	CurrentUser *db.User
 	CSRFToken   string
-	CurrentUser db.User
 	StringMap   map[string]string
 }
 

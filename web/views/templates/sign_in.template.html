@@ -1,5 +1,5 @@
-{{template "index" .}}
-{{define "content"}}
+{{ template "index" . }}
+{{ define "content" }}
 <header>
   <div>
     <h1>Elementos Manager</h1>
@@ -7,7 +7,7 @@
 </header>
 <main>
   <div>
-    <form action="/login" method="post">
+    <form action="/sign_in" method="post">
       {{ with . }}
         <input type="hidden" id="csrf_token" name="csrf_token" value="{{.CSRFToken}}"/>
       {{ end }}
@@ -18,9 +18,9 @@
         <input type="password" id="password" name="password" placeholder="Password"/>
       </label>
       <label for="submit">
-        <input type="submit" id="submit" value="Login"/>
+        <input type="submit" id="submit" value="Sign In"/>
       </label>
     </form>
   </div>
 </main>
-{{end}}
+{{ end }}

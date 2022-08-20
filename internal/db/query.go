@@ -7,12 +7,11 @@ import (
 )
 
 // GetUser queries a given user and returns it.
-func (d *Database) GetUser(r *http.Request) (User, error) {
+func (d *Database) GetUser(r *http.Request) (*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
 	user := User{}
-	var storedPassword string
 	query := "select * from users where username = $1"
 	row := d.Conn.QueryRowContext(ctx, query, r.FormValue("username"))
 	err := row.Scan(
@@ -21,15 +20,15 @@ func (d *Database) GetUser(r *http.Request) (User, error) {
 		&user.LastName,
 		&user.Username,
 		&user.Email,
-		&storedPassword,
+		&user.EncryptedPassword,
 		&user.DefaultUser,
 		&user.LastLogin,
 		&user.CreatedAt,
 		&user.UpdatedAt,
 	)
 	if err != nil {
-		return user, err
+		return &user, err
 	}
 
-	return user, nil
+	return &user, nil
 }

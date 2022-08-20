@@ -8,7 +8,8 @@ import (
 )
 
 const (
-	login     = "/login"
+	signIn    = "/sign_in"
+	signOut   = "/sign_out"
 	dashboard = "/dashboard"
 )
 
@@ -21,10 +22,10 @@ func routes() http.Handler {
 
 	mux.Get(dashboard, getDashboard)
 
-	mux.Get(login, getLogin)
-	mux.Post(login, postLogin)
+	mux.Get(signIn, getSignIn)
+	mux.Post(signIn, postSignIn)
 
-	mux.Post("/logout", postLogout)
+	mux.Post(signOut, postSignOut)
 
 	fileServer := http.FileServer(http.Dir("./web/static/"))
 	mux.Handle("/static/*", http.StripPrefix("/static/", fileServer))
