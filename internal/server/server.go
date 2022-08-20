@@ -1,33 +1,35 @@
 package server
 
 import (
-	"database/sql"
 	"html/template"
 	"net/http"
 
 	"github.com/ad9311/elementos_mgr/internal/cfg"
+	"github.com/ad9311/elementos_mgr/internal/db"
 	"github.com/alexedwards/scs/v2"
 )
 
 type data struct {
+	CSRFToken   string
+	CurrentUser db.User
+	StringMap   map[string]string
 }
 
 type application struct {
 	config        *cfg.Config
-	database      *sql.DB
+	database      *db.Database
 	session       *scs.SessionManager
 	templateCache map[string]*template.Template
-	StringMap     map[string]string
-	CSRFToken     string
+	Data          data
 }
 
 var app application
 
 // SetUp set ups the server with the loaded configuration
 // and the database.
-func SetUp(conf *cfg.Config, conn *sql.DB) error {
+func SetUp(conf *cfg.Config, dtbs *db.Database) error {
 	app.config = conf
-	app.database = conn
+	app.database = dtbs
 	templateCache, err := defaultTemplateCache()
 	if err != nil {
 		return err
