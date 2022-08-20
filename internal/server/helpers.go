@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -15,7 +16,7 @@ func userSignedIn(r *http.Request) bool {
 func validateForm(r *http.Request, fields []string) error {
 	for _, v := range fields {
 		if r.PostFormValue(v) == "" {
-			return errors.New("invalid form")
+			return errors.New("invalid form or required fields not present")
 		}
 	}
 
@@ -48,4 +49,11 @@ func encryptPassword(password string) (string, error) {
 	}
 
 	return string(encryptedPassword), nil
+}
+
+func validateDate(date time.Time) error {
+	if time.Now().After(date) {
+		return fmt.Errorf("date already passed")
+	}
+	return nil
 }

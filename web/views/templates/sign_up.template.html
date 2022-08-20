@@ -11,23 +11,26 @@
       {{ with . }}
         <input type="hidden" id="csrf_token" name="csrf_token" value="{{.CSRFToken}}"/>
       {{ end }}
-      <label for="first_name">
-        <input type="text" id="first_name" name="first_name" placeholder="First Name"/>
+      <label for="first-name">
+        <input type="text" id="first-name" name="first-name" placeholder="First Name" required/>
       </label>
-      <label for="last_name">
-        <input type="text" id="last_name" name="last_name" placeholder="Last Name"/>
+      <label for="last-name">
+        <input type="text" id="last-name" name="last-name" placeholder="Last Name" required/>
       </label>
       <label for="username">
-        <input type="text" id="username" name="username" placeholder="Username"/>
+        <input type="text" id="username" name="username" placeholder="Username" required/>
       </label>
       <label for="email">
-        <input type="email" id="email" name="email" placeholder="Email"/>
+        <input type="email" id="email" name="email" placeholder="Email" required/>
       </label>
       <label for="password">
-        <input type="password" id="password" name="password" placeholder="Password"/>
+        <input type="password" id="password" name="password" placeholder="Password" required/>
       </label>
       <label for="password-confirmation">
-        <input type="password" id="password-confirmation" name="password-confirmation" placeholder="Password Confirmation"/>
+        <input type="password" id="password-confirmation" name="password-confirmation" placeholder="Password Confirmation" required/>
+      </label>
+      <label for="code">
+        <input type="text" id="code" name="code" placeholder="Invitation Code" required/>
       </label>
       <label for="submit">
         <input type="submit" id="submit" value="Sign Up"/>

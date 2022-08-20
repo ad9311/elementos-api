@@ -6,13 +6,13 @@ import (
 	"time"
 )
 
-// SelectUser queries a given user and returns it.
-func (d *Database) SelectUser(r *http.Request) (*User, error) {
+// SelectUserByUsername queries a given user and returns it.
+func (d *Database) SelectUserByUsername(r *http.Request) (*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
 	user := User{}
-	query := "SELECT * FROM users WHERE username = $1;"
+	query := "SELECT * FROM users WHERE username=$1;"
 	row := d.Conn.QueryRowContext(ctx, query, r.PostFormValue("username"))
 	err := row.Scan(
 		&user.ID,
@@ -63,8 +63,8 @@ func (d *Database) InsertUser(r *http.Request, encryptedPassword string) error {
 	_, err := d.Conn.ExecContext(
 		ctx,
 		query,
-		r.PostFormValue("first_name"),
-		r.PostFormValue("last_name"),
+		r.PostFormValue("first-name"),
+		r.PostFormValue("last-name"),
 		r.PostFormValue("username"),
 		r.PostFormValue("email"),
 		encryptedPassword,
@@ -79,4 +79,24 @@ func (d *Database) InsertUser(r *http.Request, encryptedPassword string) error {
 	}
 
 	return nil
+}
+
+// SelectInvitationCode queries a given invitation code
+// and returns how many times it has been used.
+func (d *Database) SelectInvitationCode(code string) (InviationCodes, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	ic := InviationCodes{}
+	query := "SELECT * FROM invitation_codes WHERE code=$1;"
+	row := d.Conn.QueryRowContext(ctx, query, code)
+	_ = row.Scan(
+		&ic.ID,
+		&ic.Code,
+		&ic.Validity,
+		&ic.CreatedAt,
+		&ic.UpdatedAt,
+	)
+
+	return ic, nil
 }

@@ -52,7 +52,7 @@ func postSignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	user, err := app.database.SelectUser(r)
+	user, err := app.database.SelectUserByUsername(r)
 	app.Data.CurrentUser = user
 	if err != nil {
 		fmt.Println(err)
@@ -92,10 +92,29 @@ func getSignUp(w http.ResponseWriter, r *http.Request) {
 }
 
 func postSignUp(w http.ResponseWriter, r *http.Request) {
-	fields := []string{"first_name", "last_name", "username", "email", "password"}
+	fields := []string{
+		"first-name",
+		"last-name",
+		"username",
+		"email",
+		"password",
+		"code",
+	}
 	err := validateForm(r, fields)
 	if err != nil {
 		fmt.Println(err)
+		http.Redirect(w, r, signUp, http.StatusSeeOther)
+		return
+	}
+
+	ic, err := app.database.SelectInvitationCode(r.PostFormValue("code"))
+	err2 := validateDate(ic.Validity)
+	if err != nil {
+		fmt.Println(err)
+		http.Redirect(w, r, signUp, http.StatusSeeOther)
+		return
+	} else if err2 != nil {
+		fmt.Println(err2)
 		http.Redirect(w, r, signUp, http.StatusSeeOther)
 		return
 	}

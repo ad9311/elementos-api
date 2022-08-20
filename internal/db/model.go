@@ -15,3 +15,12 @@ type User struct {
 	CreatedAt         time.Time `json:"created_at"`
 	UpdatedAt         time.Time `json:"updated_at"`
 }
+
+// InviationCodes is the code used for sigining up.
+type InviationCodes struct {
+	ID        int64     `json:"id"`
+	Code      string    `json:"code"`
+	Validity  time.Time `json:"validity"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
+}
