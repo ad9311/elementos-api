@@ -6,10 +6,12 @@ development:
   database_password: "${DATABASE_PASSWORD}"
   server_port: "3000"
   server_cache: false
+  server_secure: false
 production:
   database_url: "${DATABASE_URL}"
   server_port: "${PORT}"
   server_cache: true
+  server_secure: true
 test:
   database_host: "localhost"
   database_port: "5432"
@@ -18,3 +20,4 @@ test:
   database_password: "${DATABASE_PASSWORD}"
   server_port: "3001"
   server_cache: false
+  server_secure: false

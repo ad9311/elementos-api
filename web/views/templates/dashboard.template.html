@@ -1,0 +1,17 @@
+{{template "index" .}}
+{{define "content"}}
+<header>
+  <div>
+    <h1>Elementos Manager</h1>
+  </div>
+</header>
+<main>
+  <p>Under construction...</p>
+  <form action="/logout" method="post">
+    <input type="hidden" id="csrf_token" name="csrf_token" value="{{.CSRFToken}}"/>
+    <label for="submit">
+      <input type="submit" id="submit" value="Logout"/>
+    </label>
+  </form>
+</main>
+{{end}}
