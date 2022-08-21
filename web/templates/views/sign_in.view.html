@@ -1,10 +1,6 @@
 {{ template "index" . }}
-{{ define "content" }}
-<header>
-  <div>
-    <h1>HITO Manager</h1>
-  </div>
-</header>
+{{ define "main" }}
+{{ template "session_header" }}
 <main>
   <div>
     <form action="/sign_in" method="post">
