@@ -27,9 +27,17 @@ type InviationCodes struct {
 
 // Element is the periodic table element database model.
 type Element struct {
-	ID           int64
-	Name         string
-	Symbol       string
-	AtomicNumber string
-	AtomicMass   string
+	ID             int64
+	Name           string
+	Symbol         string
+	AtomicNumber   string
+	AtomicMass     string
+	Group          string
+	Period         string
+	GroupColor     string
+	StandardState  string
+	MeltingPoint   string
+	BoilingPoint   string
+	Density        string
+	YearDiscovered string
 }
