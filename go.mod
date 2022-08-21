@@ -1,4 +1,4 @@
-module github.com/ad9311/elementos_mgr
+module github.com/ad9311/hitomgr
 
 go 1.19
 
