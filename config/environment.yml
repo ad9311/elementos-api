@@ -1,0 +1,23 @@
+development:
+  database_host: "localhost"
+  database_port: "5432"
+  database_name: "hitomgr_development"
+  database_username: "${DATABASE_USERNAME}"
+  database_password: "${DATABASE_PASSWORD}"
+  server_port: "3000"
+  server_cache: false
+  server_secure: false
+production:
+  database_url: "${DATABASE_URL}"
+  server_port: "${PORT}"
+  server_cache: true
+  server_secure: true
+test:
+  database_host: "localhost"
+  database_port: "5432"
+  database_name: "hitomgr_test"
+  database_username: "${DATABASE_USERNAME}"
+  database_password: "${DATABASE_PASSWORD}"
+  server_port: "3001"
+  server_cache: false
+  server_secure: false
