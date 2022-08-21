@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	signInTemplate    = "sign_in.template.html"
-	signUpTemplate    = "sign_up.template.html"
-	dashboardTemplate = "dashboard.template.html"
+	signInView    = "sign_in.view.html"
+	signUpView    = "sign_up.view.html"
+	dashboardView = "dashboard.view.html"
 )
 
 func getRoot(w http.ResponseWriter, r *http.Request) {
@@ -24,7 +24,7 @@ func getRoot(w http.ResponseWriter, r *http.Request) {
 func getDashboard(w http.ResponseWriter, r *http.Request) {
 	if userSignedIn(r) {
 		app.Data.CSRFToken = nosurf.Token(r)
-		if err := writeTemplate(w, dashboardTemplate); err != nil {
+		if err := writeView(w, dashboardView); err != nil {
 			fmt.Println(err)
 		}
 	} else {
@@ -37,7 +37,7 @@ func getSignIn(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, dashboard, http.StatusSeeOther)
 	} else {
 		app.Data.CSRFToken = nosurf.Token(r)
-		if err := writeTemplate(w, signInTemplate); err != nil {
+		if err := writeView(w, signInView); err != nil {
 			fmt.Println(err)
 		}
 	}
@@ -85,7 +85,7 @@ func getSignUp(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, dashboard, http.StatusSeeOther)
 	} else {
 		app.Data.CSRFToken = nosurf.Token(r)
-		if err := writeTemplate(w, signUpTemplate); err != nil {
+		if err := writeView(w, signUpView); err != nil {
 			fmt.Println(err)
 		}
 	}

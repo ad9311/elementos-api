@@ -16,11 +16,11 @@ type data struct {
 }
 
 type application struct {
-	config        *cfg.Config
-	database      *db.Database
-	session       *scs.SessionManager
-	templateCache map[string]*template.Template
-	Data          data
+	config     *cfg.Config
+	database   *db.Database
+	session    *scs.SessionManager
+	viewsCache map[string]*template.Template
+	Data       data
 }
 
 var app application
@@ -30,11 +30,11 @@ var app application
 func SetUp(conf *cfg.Config, dtbs *db.Database) error {
 	app.config = conf
 	app.database = dtbs
-	templateCache, err := defaultTemplateCache()
+	viewsCache, err := deafultViewsCache()
 	if err != nil {
 		return err
 	}
-	app.templateCache = templateCache
+	app.viewsCache = viewsCache
 	app.session = scs.New()
 	app.session.Cookie.Persist = true
 	app.session.Cookie.SameSite = http.SameSiteLaxMode

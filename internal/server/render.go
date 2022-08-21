@@ -9,72 +9,79 @@ import (
 )
 
 const (
-	layouts   = "./web/views/layouts/*.layout.html"
-	templates = "./web/views/templates/*.template.html"
+	layoutsPath  = "./web/templates/layouts/*.layout.html"
+	viewsPath    = "./web/templates/views/*.view.html"
+	partialsPath = "./web/templates/partials/*.partial.html"
 )
 
-func writeTemplate(w http.ResponseWriter, tmpl string) error {
-	templateMap, err := defaultTemplateCache()
+func writeView(w http.ResponseWriter, tmpl string) error {
+	templateMap, err := deafultViewsCache()
 	if err != nil {
 		return err
 	}
 
-	t, exist := templateMap[tmpl]
+	v, exist := templateMap[tmpl]
 	if !exist {
 		return fmt.Errorf("template %s does not exist", tmpl)
 	}
 
 	buff := new(bytes.Buffer)
-	err = t.Execute(buff, app.Data)
+	err = v.Execute(buff, app.Data)
 
 	_, err = buff.WriteTo(w)
 
 	return nil
 }
 
-func defaultTemplateCache() (map[string]*template.Template, error) {
+func deafultViewsCache() (map[string]*template.Template, error) {
 	if app.config.ServerCache {
-		return app.templateCache, nil
+		return app.viewsCache, nil
 	}
 
-	templateCache, err := loadTemplateCache()
+	viewsCache, err := loadViewsCache()
 	if err != nil {
-		return app.templateCache, err
+		return app.viewsCache, err
 	}
 
-	app.templateCache = templateCache
-	return app.templateCache, nil
+	app.viewsCache = viewsCache
+	return app.viewsCache, nil
 }
 
-func loadTemplateCache() (map[string]*template.Template, error) {
+func loadViewsCache() (map[string]*template.Template, error) {
 	var tmplFuncs = template.FuncMap{}
 
-	cache := map[string]*template.Template{}
-	tmpls, err := filepath.Glob(templates)
+	vc := map[string]*template.Template{}
+	views, err := filepath.Glob(viewsPath)
 	if err != nil {
-		return cache, err
+		return vc, err
 	}
 
-	for _, t := range tmpls {
-		name := filepath.Base(t)
-		tmplDef, err := template.New(name).Funcs(tmplFuncs).ParseFiles(t)
+	for _, v := range views {
+		name := filepath.Base(v)
+		newView, err := template.New(name).Funcs(tmplFuncs).ParseFiles(v)
 		if err != nil {
-			return cache, err
+			return vc, err
 		}
 
-		lays, err := filepath.Glob(layouts)
+		layouts, err := filepath.Glob(layoutsPath)
 		if err != nil {
-			return cache, err
+			return vc, err
 		}
 
-		if len(lays) > 0 {
-			tmplDef, err = tmplDef.ParseGlob(layouts)
+		partials, err := filepath.Glob(partialsPath)
+		if err != nil {
+			return vc, err
+		}
+
+		if (len(layouts) > 0) && (len(partials) > 0) {
+			newView, err = newView.ParseGlob(layoutsPath)
+			newView, err = newView.ParseGlob(partialsPath)
 			if err != nil {
-				return cache, err
+				return vc, err
 			}
 		}
-		cache[name] = tmplDef
+		vc[name] = newView
 	}
 
-	return cache, err
+	return vc, err
 }
