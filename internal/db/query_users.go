@@ -33,9 +33,9 @@ func (d *Database) SelectUserByUsername(r *http.Request) (*User, error) {
 	return &user, nil
 }
 
-// UpdateLastLogin updates the last_login column in the users table
+// UpdateUserLastLogin updates the last_login column in the users table
 // each time a userssigns in.
-func (d *Database) UpdateLastLogin(user *User) error {
+func (d *Database) UpdateUserLastLogin(user *User) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
@@ -79,24 +79,4 @@ func (d *Database) InsertUser(r *http.Request, encryptedPassword string) error {
 	}
 
 	return nil
-}
-
-// SelectInvitationCode queries a given invitation code
-// and returns how many times it has been used.
-func (d *Database) SelectInvitationCode(code string) (InviationCodes, error) {
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancel()
-
-	ic := InviationCodes{}
-	query := "SELECT * FROM invitation_codes WHERE code=$1;"
-	row := d.Conn.QueryRowContext(ctx, query, code)
-	_ = row.Scan(
-		&ic.ID,
-		&ic.Code,
-		&ic.Validity,
-		&ic.CreatedAt,
-		&ic.UpdatedAt,
-	)
-
-	return ic, nil
 }
