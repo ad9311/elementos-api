@@ -4,8 +4,8 @@ import (
 	"html/template"
 	"net/http"
 
-	"github.com/ad9311/elementos_mgr/internal/cfg"
-	"github.com/ad9311/elementos_mgr/internal/db"
+	"github.com/ad9311/hitomgr/internal/cfg"
+	"github.com/ad9311/hitomgr/internal/db"
 	"github.com/alexedwards/scs/v2"
 )
 
