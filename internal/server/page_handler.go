@@ -44,8 +44,8 @@ func getSignIn(w http.ResponseWriter, r *http.Request) {
 }
 
 func postSignIn(w http.ResponseWriter, r *http.Request) {
-	fields := []string{"username", "password"}
-	err := validateForm(r, fields)
+	params := []string{"username", "password"}
+	err := validateFormParams(r, params)
 	if err != nil {
 		fmt.Println(err)
 		http.Redirect(w, r, signIn, http.StatusSeeOther)
@@ -68,7 +68,7 @@ func postSignIn(w http.ResponseWriter, r *http.Request) {
 	}
 	user.EncryptedPassword = ""
 
-	err = app.database.UpdateLastLogin(user)
+	err = app.database.UpdateUserLastLogin(user)
 	if err != nil {
 		fmt.Println(err)
 		http.Redirect(w, r, signIn, http.StatusSeeOther)
@@ -92,15 +92,7 @@ func getSignUp(w http.ResponseWriter, r *http.Request) {
 }
 
 func postSignUp(w http.ResponseWriter, r *http.Request) {
-	fields := []string{
-		"first-name",
-		"last-name",
-		"username",
-		"email",
-		"password",
-		"code",
-	}
-	err := validateForm(r, fields)
+	err := validateSignUpForm(r)
 	if err != nil {
 		fmt.Println(err)
 		http.Redirect(w, r, signUp, http.StatusSeeOther)
@@ -108,21 +100,13 @@ func postSignUp(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ic, err := app.database.SelectInvitationCode(r.PostFormValue("code"))
-	err2 := validateDate(ic.Validity)
 	if err != nil {
 		fmt.Println(err)
 		http.Redirect(w, r, signUp, http.StatusSeeOther)
 		return
-	} else if err2 != nil {
-		fmt.Println(err2)
-		http.Redirect(w, r, signUp, http.StatusSeeOther)
-		return
 	}
 
-	err = confirmPasswords(
-		r.PostFormValue("password"),
-		r.PostFormValue("password-confirmation"),
-	)
+	err = validateDate(ic.Validity)
 	if err != nil {
 		fmt.Println(err)
 		http.Redirect(w, r, signUp, http.StatusSeeOther)
