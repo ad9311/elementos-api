@@ -48,7 +48,15 @@ func deafultViewsCache() (map[string]*template.Template, error) {
 }
 
 func loadViewsCache() (map[string]*template.Template, error) {
-	var tmplFuncs = template.FuncMap{}
+	var tmplFuncs = template.FuncMap{
+		"userSignedIn": func() bool {
+			if app.Data.CurrentUser != nil {
+				return true
+			}
+
+			return false
+		},
+	}
 
 	vc := map[string]*template.Template{}
 	views, err := filepath.Glob(viewsPath)

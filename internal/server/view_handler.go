@@ -131,6 +131,7 @@ func postSignUp(w http.ResponseWriter, r *http.Request) {
 }
 
 func postSignOut(w http.ResponseWriter, r *http.Request) {
+	app.Data.CurrentUser = nil
 	_ = app.session.Destroy(r.Context())
 	_ = app.session.RenewToken(r.Context())
 	http.Redirect(w, r, signIn, http.StatusSeeOther)

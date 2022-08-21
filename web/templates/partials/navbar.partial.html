@@ -1,3 +1,18 @@
 {{define "navbar"}}
-<p>Navbar</p>
+{{if userSignedIn -}}
+<nav>
+  <div>
+    {{ with .CurrentUser }}
+    <h2>Hello {{ .FirstName }} {{ .LastName }}</h2>
+    <p>{{ .LastLogin }}</p>
+    {{ end }}
+  </div>
+  <div>
+    <ul>
+      <li><a href="/dashboard">Dashboard</a></li>
+      <li><a href="/sign_in">New</a></li>
+    </ul>
+  </div>
+</nav>
+{{- end }}
 {{end}}
