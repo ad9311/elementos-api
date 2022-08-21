@@ -1,19 +1,7 @@
 {{ template "index" . }}
-{{ define "content" }}
-<header>
-  <div>
-    <h1>HITO Manager</h1>
-  </div>
-</header>
+{{ define "main" }}
+{{ template "dashboard_header" }}
 <main>
   <p>Under construction...</p>
-  <form action="/sign_out" method="post">
-    {{ with . }}
-      <input type="hidden" id="csrf_token" name="csrf_token" value="{{.CSRFToken}}"/>
-    {{ end }}
-    <label for="submit">
-      <input type="submit" id="submit" value="Sign Out"/>
-    </label>
-  </form>
 </main>
 {{ end }}

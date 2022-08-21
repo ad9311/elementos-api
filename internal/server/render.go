@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"net/http"
 	"path/filepath"
+	"time"
 )
 
 const (
@@ -48,16 +49,6 @@ func deafultViewsCache() (map[string]*template.Template, error) {
 }
 
 func loadViewsCache() (map[string]*template.Template, error) {
-	var tmplFuncs = template.FuncMap{
-		"userSignedIn": func() bool {
-			if app.Data.CurrentUser != nil {
-				return true
-			}
-
-			return false
-		},
-	}
-
 	vc := map[string]*template.Template{}
 	views, err := filepath.Glob(viewsPath)
 	if err != nil {
@@ -66,7 +57,7 @@ func loadViewsCache() (map[string]*template.Template, error) {
 
 	for _, v := range views {
 		name := filepath.Base(v)
-		newView, err := template.New(name).Funcs(tmplFuncs).ParseFiles(v)
+		newView, err := template.New(name).Funcs(templateFuncMap()).ParseFiles(v)
 		if err != nil {
 			return vc, err
 		}
@@ -92,4 +83,19 @@ func loadViewsCache() (map[string]*template.Template, error) {
 	}
 
 	return vc, err
+}
+
+func templateFuncMap() template.FuncMap {
+	return template.FuncMap{
+		"userSignedIn": func() bool {
+			if app.Data.CurrentUser != nil {
+				return true
+			}
+
+			return false
+		},
+		"formatDate": func(date time.Time) string {
+			return date.Format("Mon Jan 02, 03:04:05 PM")
+		},
+	}
 }

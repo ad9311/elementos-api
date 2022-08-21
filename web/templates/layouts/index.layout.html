@@ -9,8 +9,8 @@
     <title>HITO Manager</title>
   </head>
   <body>
-    {{ template "navbar" }}
-    {{ block "content" . }}
+    {{ template "navbar" . }}
+    {{ block "main" . }}
     {{ end }}
   </body>
 </html>
