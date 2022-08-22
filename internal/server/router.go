@@ -22,17 +22,17 @@ func routes() http.Handler {
 	mux.Use(loadSession)
 	mux.Use(newCSRF)
 
-	// mux.Get(root, getRoot)
+	mux.Get(root, controller.GetRoot)
 
-	// mux.Get(dashboard, getDashboard)
+	mux.Get(dashboard, controller.GetDashboard)
 
 	mux.Get(signIn, controller.GetSignIn)
-	// mux.Post(signIn, postSignIn)
+	mux.Post(signIn, controller.PostSignIn)
 
-	// mux.Get(signUp, getSignUp)
-	// mux.Post(signUp, postSignUp)
+	mux.Get(signUp, controller.GetSignUp)
+	mux.Post(signUp, controller.PostSignUp)
 
-	// mux.Post(signOut, postSignOut)
+	mux.Post(signOut, controller.PostSignOut)
 
 	fileServer := http.FileServer(http.Dir("./web/static/"))
 	mux.Handle("/static/*", http.StripPrefix("/static/", fileServer))
