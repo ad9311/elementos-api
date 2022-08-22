@@ -1,0 +1,43 @@
+{{ define "session_form" }}
+{{ if eq .URL "/sign_in" }}
+<form action="/sign_in" method="post">
+{{ else }}
+<form action="/sign_up" method="post">
+{{ end }}
+  <input type="hidden" id="csrf_token" name="csrf_token" value="{{.CSRFToken}}"/>
+  {{ if eq .URL "/sign_up" }}
+  <label for="first-name">
+    <input type="text" id="first-name" name="first-name" placeholder="First Name" required/>
+  </label>
+  <label for="last-name">
+    <input type="text" id="last-name" name="last-name" placeholder="Last Name" required/>
+  </label>
+  {{ end }}
+  <label for="username">
+    <input type="text" id="username" name="username" placeholder="Username" required/>
+  </label>
+  {{ if eq .URL "/sign_up" }}
+  <label for="email">
+    <input type="email" id="email" name="email" placeholder="Email" required/>
+  </label>
+  {{ end }}
+  <label for="password">
+    <input type="password" id="password" name="password" placeholder="Password" required/>
+  </label>
+  {{ if eq .URL "/sign_up" }}
+  <label for="password-confirmation">
+    <input type="password" id="password-confirmation" name="password-confirmation" placeholder="Password Confirmation" required/>
+  </label>
+  <label for="code">
+    <input type="text" id="code" name="code" placeholder="Invitation Code" required/>
+  </label>
+  {{ end }}
+  <label for="submit">
+    {{ if eq .URL "/sign_in" }}
+    <input type="submit" id="submit" value="Sign In"/>
+    {{ else }}
+    <input type="submit" id="submit" value="Sign Up"/>
+    {{ end }}
+  </label>
+</form>
+{{ end }}

@@ -12,6 +12,7 @@ import (
 type App struct {
 	CurrentUser *db.User
 	Session     *scs.SessionManager
+	URL         string
 	CSRFToken   string
 	StringMap   map[string]string
 }

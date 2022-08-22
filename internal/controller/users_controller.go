@@ -14,6 +14,7 @@ func GetSignIn(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 	} else {
 		App.CSRFToken = nosurf.Token(r)
+		App.URL = r.URL.String()
 		if err := render.WriteView(w, "users_sign_in"); err != nil {
 			fmt.Println(err)
 		}
@@ -64,6 +65,7 @@ func GetSignUp(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 	} else {
 		App.CSRFToken = nosurf.Token(r)
+		App.URL = r.URL.String()
 		if err := render.WriteView(w, "users_sign_up"); err != nil {
 			fmt.Println(err)
 		}
