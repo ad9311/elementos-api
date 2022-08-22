@@ -4,10 +4,11 @@ import (
 	"fmt"
 
 	"github.com/ad9311/hitomgr/internal/cfg"
+	"github.com/ad9311/hitomgr/internal/controller"
 	"github.com/ad9311/hitomgr/internal/db"
 	"github.com/ad9311/hitomgr/internal/render"
 	"github.com/ad9311/hitomgr/internal/server"
-	sess "github.com/ad9311/hitomgr/internal/session"
+	"github.com/ad9311/hitomgr/internal/sess"
 )
 
 func main() {
@@ -25,12 +26,14 @@ func main() {
 
 	sessionData := sess.Init(config.SeverSecure)
 
+	controller.Init(database, sessionData)
+
 	err = render.Init(config.ServerCache, sessionData)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	server.SetUp(config, database)
+	server.SetUp(config, database, sessionData.Session)
 
 	err = server.New().ListenAndServe()
 	if err != nil {

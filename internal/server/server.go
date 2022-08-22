@@ -27,7 +27,7 @@ var app application
 
 // SetUp set ups the server with the loaded configuration
 // and the database.
-func SetUp(conf *cfg.Config, dtbs *db.Database) error {
+func SetUp(conf *cfg.Config, dtbs *db.Database, session *scs.SessionManager) error {
 	app.config = conf
 	app.database = dtbs
 	viewsCache, err := deafultViewsCache()
@@ -35,10 +35,7 @@ func SetUp(conf *cfg.Config, dtbs *db.Database) error {
 		return err
 	}
 	app.viewsCache = viewsCache
-	app.session = scs.New()
-	app.session.Cookie.Persist = true
-	app.session.Cookie.SameSite = http.SameSiteLaxMode
-	app.session.Cookie.Secure = app.config.SeverSecure
+	app.session = session
 
 	return nil
 }
