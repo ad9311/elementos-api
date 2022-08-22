@@ -1,5 +1,5 @@
 {{ define "landmarks_new_form" }}
-<form action="/landmarks" method="post">
+<form action="/landmarks" id="new_landmark" method="post">
   <input type="hidden" id="csrf_token" name="csrf_token" value="{{.CSRFToken}}"/>
   <label for="name">
     <input type="text" id="name" name="name" placeholder="Name"/>

@@ -46,6 +46,12 @@ func GetNewLandmark(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// PostNewLandmark ...
+func PostNewLandmark(w http.ResponseWriter, r *http.Request) {
+	path := fmt.Sprintf("/landmarks/%d", App.Landmark.ID)
+	http.Redirect(w, r, path, http.StatusSeeOther)
+}
+
 // GetEditLandmark ...
 func GetEditLandmark(w http.ResponseWriter, r *http.Request) {
 	if App.IsUserSignedIn(r) {
@@ -57,4 +63,10 @@ func GetEditLandmark(w http.ResponseWriter, r *http.Request) {
 	} else {
 		http.Redirect(w, r, "/sign_in", http.StatusSeeOther)
 	}
+}
+
+// PostEditLandmark ...
+func PostEditLandmark(w http.ResponseWriter, r *http.Request) {
+	path := fmt.Sprintf("/landmarks/%d", App.Landmark.ID)
+	http.Redirect(w, r, path, http.StatusSeeOther)
 }

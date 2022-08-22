@@ -31,9 +31,13 @@ func routes() http.Handler {
 	// Landmarks
 	mux.Get("/dashboard", controller.GetDashboard)
 	mux.Route("/landmarks", func(r chi.Router) {
-		r.Get("/{landmarkID}", controller.GetShowLandmark)
-		r.Get("/{landmarkID}/edit", controller.GetEditLandmark)
+		r.Post("/", controller.PostNewLandmark)
 		r.Get("/new", controller.GetNewLandmark)
+		r.Route("/{landmarkID}", func(r chi.Router) {
+			r.Get("/", controller.GetShowLandmark)
+			r.Get("/edit", controller.GetEditLandmark)
+			r.Post("/", controller.PostEditLandmark)
+		})
 	})
 
 	fileServer := http.FileServer(http.Dir("./web/static/"))
