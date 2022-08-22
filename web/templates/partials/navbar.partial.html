@@ -1,5 +1,5 @@
 {{ define "navbar" }}
-{{ if userSignedIn }}
+{{ if .CurrentUser }}
 <nav>
   <div>
     {{ with .CurrentUser }}

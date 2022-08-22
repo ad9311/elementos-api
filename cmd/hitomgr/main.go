@@ -5,7 +5,9 @@ import (
 
 	"github.com/ad9311/hitomgr/internal/cfg"
 	"github.com/ad9311/hitomgr/internal/db"
+	"github.com/ad9311/hitomgr/internal/render"
 	"github.com/ad9311/hitomgr/internal/server"
+	sess "github.com/ad9311/hitomgr/internal/session"
 )
 
 func main() {
@@ -17,6 +19,13 @@ func main() {
 	}
 
 	database, err := db.New(config.DatabaseURL)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	sessionData := sess.Init(config.SeverSecure)
+
+	err = render.Init(config.ServerCache, sessionData)
 	if err != nil {
 		fmt.Println(err)
 	}
