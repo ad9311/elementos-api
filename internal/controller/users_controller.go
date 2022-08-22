@@ -10,10 +10,10 @@ import (
 
 // GetSignIn ...
 func GetSignIn(w http.ResponseWriter, r *http.Request) {
-	if Data.Session.GetBool(r.Context(), "signedIn") {
+	if App.IsUserSignedIn(r) {
 		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 	} else {
-		Data.CSRFToken = nosurf.Token(r)
+		App.CSRFToken = nosurf.Token(r)
 		if err := render.WriteView(w, "sign_in.view.html"); err != nil {
 			fmt.Println(err)
 		}
@@ -31,7 +31,7 @@ func PostSignIn(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user, err := database.SelectUserByUsername(r)
-	Data.CurrentUser = user
+	App.CurrentUser = user
 	if err != nil {
 		fmt.Println(err)
 		http.Redirect(w, r, "/sign_in", http.StatusSeeOther)
@@ -53,17 +53,17 @@ func PostSignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	_ = Data.Session.RenewToken(r.Context())
-	Data.Session.Put(r.Context(), "signedIn", true)
+	_ = App.Session.RenewToken(r.Context())
+	App.Session.Put(r.Context(), "signedIn", true)
 	http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 }
 
 // GetSignUp ...
 func GetSignUp(w http.ResponseWriter, r *http.Request) {
-	if Data.Session.GetBool(r.Context(), "signedIn") {
+	if App.IsUserSignedIn(r) {
 		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 	} else {
-		Data.CSRFToken = nosurf.Token(r)
+		App.CSRFToken = nosurf.Token(r)
 		if err := render.WriteView(w, "sign_up.view.html"); err != nil {
 			fmt.Println(err)
 		}
@@ -93,7 +93,7 @@ func PostSignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ep, err := encryptPassword(r.PostFormValue("password"))
+	ep, err := App.EncryptPassword(r.PostFormValue("password"))
 	if err != nil {
 		fmt.Println(err)
 		http.Redirect(w, r, "/sign_up", http.StatusSeeOther)
@@ -112,8 +112,8 @@ func PostSignUp(w http.ResponseWriter, r *http.Request) {
 
 // PostSignOut ...
 func PostSignOut(w http.ResponseWriter, r *http.Request) {
-	Data.CurrentUser = nil
-	_ = Data.Session.Destroy(r.Context())
-	_ = Data.Session.RenewToken(r.Context())
+	App.CurrentUser = nil
+	_ = App.Session.Destroy(r.Context())
+	_ = App.Session.RenewToken(r.Context())
 	http.Redirect(w, r, "/sign_in", http.StatusSeeOther)
 }

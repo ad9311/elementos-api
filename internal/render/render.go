@@ -19,14 +19,14 @@ const (
 
 var viewsCache map[string]*template.Template
 
-// Data ...
-var Data *sess.Data
+// App ...
+var App *sess.App
 var cache bool
 
 // Init ...
-func Init(serverCache bool, sessionData *sess.Data) error {
+func Init(serverCache bool, sessionData *sess.App) error {
 	cache = serverCache
-	Data = sessionData
+	App = sessionData
 
 	vc, err := deafultViewsCache()
 	if err != nil {
@@ -50,7 +50,7 @@ func WriteView(w http.ResponseWriter, tmpl string) error {
 	}
 
 	buff := new(bytes.Buffer)
-	err = v.Execute(buff, Data)
+	err = v.Execute(buff, App)
 
 	_, err = buff.WriteTo(w)
 
