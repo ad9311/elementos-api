@@ -1,7 +1,9 @@
 {{ template "index" . }}
 {{ define "main" }}
 <main>
-  <h2>Add a new landmark</h2>
-  {{ template "landmarks_form" . }}
+  {{ with .Landmark }}
+  <h2>Edit {{ .Name }}</h2>
+  {{ end }}
+  {{ template "landmarks_edit_form" . }}
 </main>
 {{ end }}

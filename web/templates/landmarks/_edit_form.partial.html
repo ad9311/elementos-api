@@ -1,11 +1,7 @@
-{{ define "landmarks_form" }}
-{{ if eq .URL "/landmarks/new" }}
-<form action="/landmarks" method="post">
-{{ else }}
+{{ define "landmarks_edit_form" }}
 {{ with .Landmark }}
-<form action="/landmarks/{{ .ID }}" method="put">
-{{ end }}
-{{ end }}
+<form action="/landmarks/{{ .ID }}" id="edit_landmark" method="put">
+  {{ end }}
   <input type="hidden" id="csrf_token" name="csrf_token" value="{{.CSRFToken}}"/>
   {{ with .Landmark }}
   <label for="name">
@@ -35,13 +31,9 @@
   <label for="img-urls">
     <input type="text" id="img-urls" name="img-urls" placeholder="Image URLs" value="{{ .ImgURLs }}"/>
   </label>
-  {{ end }}
   <label for="submit">
-    {{ if eq .URL "/landmarks/new" }}
-    <input type="submit" id="submit" value="Create"/>
-    {{ else }}
     <input type="submit" id="submit" value="Edit"/>
-    {{ end }}
   </label>
+  {{ end }}
 </form>
 {{ end }}

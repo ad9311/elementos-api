@@ -15,8 +15,7 @@ var database *db.Database
 func Init(dtbs *db.Database, sessionData *sess.App) {
 	database = dtbs
 	App = sessionData
-	App.Landmark = &db.Landmark{}
-	App.Landmarks = []*db.Landmark{{
+	App.Landmark = &db.Landmark{
 		ID:           1,
 		Name:         "San Felipe Castle",
 		NativeName:   "Castillo San Felipe",
@@ -30,5 +29,6 @@ func Init(dtbs *db.Database, sessionData *sess.App) {
 		CreatedAt:    time.Now(),
 		UpdatedAt:    time.Now(),
 		CreatedBy:    "ad9311",
-	}}
+	}
+	App.Landmarks = []*db.Landmark{App.Landmark}
 }
