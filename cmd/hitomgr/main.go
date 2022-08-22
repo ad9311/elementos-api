@@ -33,7 +33,7 @@ func main() {
 		fmt.Println(err)
 	}
 
-	server.SetUp(config, database, sessionData.Session)
+	server.Init(config, sessionData.Session)
 
 	err = server.New().ListenAndServe()
 	if err != nil {

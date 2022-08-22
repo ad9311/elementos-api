@@ -11,7 +11,7 @@ func newCSRF(next http.Handler) http.Handler {
 	csrfHandler.SetBaseCookie(http.Cookie{
 		HttpOnly: true,
 		Path:     "/",
-		Secure:   app.config.SeverSecure,
+		Secure:   config.SeverSecure,
 		SameSite: http.SameSiteLaxMode,
 	})
 
@@ -19,5 +19,5 @@ func newCSRF(next http.Handler) http.Handler {
 }
 
 func loadSession(next http.Handler) http.Handler {
-	return app.session.LoadAndSave(next)
+	return session.LoadAndSave(next)
 }
