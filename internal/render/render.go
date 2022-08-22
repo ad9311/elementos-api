@@ -6,15 +6,16 @@ import (
 	"html/template"
 	"net/http"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/ad9311/hitomgr/internal/sess"
 )
 
 const (
-	layoutsPath  = "./web/templates/layouts/*.layout.html"
-	viewsPath    = "./web/templates/views/*.view.html"
-	partialsPath = "./web/templates/partials/*.partial.html"
+	layoutsPath  = "./web/templates/**/*.layout.html"
+	viewsPath    = "./web/templates/**/*.view.html"
+	partialsPath = "./web/templates/**/*.partial.html"
 )
 
 var viewsCache map[string]*template.Template
@@ -38,15 +39,15 @@ func Init(serverCache bool, sessionData *sess.App) error {
 }
 
 // WriteView ...
-func WriteView(w http.ResponseWriter, tmpl string) error {
+func WriteView(w http.ResponseWriter, ID string) error {
 	templateMap, err := deafultViewsCache()
 	if err != nil {
 		return err
 	}
 
-	v, exist := templateMap[tmpl]
+	v, exist := templateMap[ID]
 	if !exist {
-		return fmt.Errorf("template %s does not exist", tmpl)
+		return fmt.Errorf("template %s does not exist", ID)
 	}
 
 	buff := new(bytes.Buffer)
@@ -79,8 +80,8 @@ func loadViewsCache() (map[string]*template.Template, error) {
 	}
 
 	for _, v := range views {
-		name := filepath.Base(v)
-		newView, err := template.New(name).Funcs(templateFuncMap()).ParseFiles(v)
+		file := filepath.Base(v)
+		newView, err := template.New(file).Funcs(templateFuncMap()).ParseFiles(v)
 		if err != nil {
 			return vc, err
 		}
@@ -102,10 +103,16 @@ func loadViewsCache() (map[string]*template.Template, error) {
 				return vc, err
 			}
 		}
-		vc[name] = newView
+		vc[viewID(v)] = newView
 	}
 
 	return vc, err
+}
+
+func viewID(path string) string {
+	dir := strings.Split(filepath.Dir(path), "/")
+	action := strings.Split(filepath.Base(path), ".")
+	return fmt.Sprintf("%s_%s", dir[len(dir)-1], action[0])
 }
 
 func templateFuncMap() template.FuncMap {
