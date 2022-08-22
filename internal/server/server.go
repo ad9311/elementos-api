@@ -1,49 +1,25 @@
 package server
 
 import (
-	"html/template"
 	"net/http"
 
 	"github.com/ad9311/hitomgr/internal/cfg"
-	"github.com/ad9311/hitomgr/internal/db"
 	"github.com/alexedwards/scs/v2"
 )
 
-type data struct {
-	CurrentUser *db.User
-	CSRFToken   string
-	StringMap   map[string]string
-}
+var config *cfg.Config
+var session *scs.Session
 
-type application struct {
-	config     *cfg.Config
-	database   *db.Database
-	session    *scs.SessionManager
-	viewsCache map[string]*template.Template
-	Data       data
-}
-
-var app application
-
-// SetUp set ups the server with the loaded configuration
-// and the database.
-func SetUp(conf *cfg.Config, dtbs *db.Database, session *scs.SessionManager) error {
-	app.config = conf
-	app.database = dtbs
-	viewsCache, err := deafultViewsCache()
-	if err != nil {
-		return err
-	}
-	app.viewsCache = viewsCache
-	app.session = session
-
-	return nil
+// Init ...
+func Init(conf *cfg.Config, ssn *scs.SessionManager) {
+	config = conf
+	session = ssn
 }
 
 // New returns a new server with the loaded configuration.
 func New() *http.Server {
 	return &http.Server{
-		Addr:    ":" + app.config.ServerPort,
+		Addr:    ":" + config.ServerPort,
 		Handler: routes(),
 	}
 }

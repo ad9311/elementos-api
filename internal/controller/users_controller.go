@@ -11,7 +11,7 @@ import (
 // GetSignIn ...
 func GetSignIn(w http.ResponseWriter, r *http.Request) {
 	if Data.Session.GetBool(r.Context(), "signedIn") {
-		http.Redirect(w, r, "/dasboard", http.StatusSeeOther)
+		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 	} else {
 		Data.CSRFToken = nosurf.Token(r)
 		if err := render.WriteView(w, "sign_in.view.html"); err != nil {
