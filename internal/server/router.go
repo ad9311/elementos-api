@@ -7,14 +7,6 @@ import (
 	"github.com/go-chi/chi"
 )
 
-const (
-	root      = "/"
-	signIn    = "/sign_in"
-	signOut   = "/sign_out"
-	signUp    = "/sign_up"
-	dashboard = "/dashboard"
-)
-
 func routes() http.Handler {
 	mux := chi.NewRouter()
 
@@ -22,17 +14,27 @@ func routes() http.Handler {
 	mux.Use(loadSession)
 	mux.Use(newCSRF)
 
-	mux.Get(root, controller.GetRoot)
+	// Root
+	mux.Get("/", controller.GetRoot)
 
-	mux.Get(dashboard, controller.GetDashboard)
+	// Users
+	mux.Route("/sign_in", func(r chi.Router) {
+		r.Get("/", controller.GetSignIn)
+		r.Post("/", controller.PostSignIn)
+	})
+	mux.Route("/sign_up", func(r chi.Router) {
+		r.Get("/", controller.GetSignUp)
+		r.Post("/", controller.PostSignUp)
+	})
+	mux.Post("/sign_out", controller.PostSignOut)
 
-	mux.Get(signIn, controller.GetSignIn)
-	mux.Post(signIn, controller.PostSignIn)
-
-	mux.Get(signUp, controller.GetSignUp)
-	mux.Post(signUp, controller.PostSignUp)
-
-	mux.Post(signOut, controller.PostSignOut)
+	// Landmarks
+	mux.Get("/dashboard", controller.GetDashboard)
+	mux.Route("/landmarks", func(r chi.Router) {
+		r.Get("/{landmarkID}", controller.GetShowLandmark)
+		r.Get("/{landmarkID}/edit", controller.GetEditLandmark)
+		r.Get("/new", controller.GetNewLandmark)
+	})
 
 	fileServer := http.FileServer(http.Dir("./web/static/"))
 	mux.Handle("/static/*", http.StripPrefix("/static/", fileServer))

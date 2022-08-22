@@ -24,3 +24,21 @@ type InviationCodes struct {
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
+
+// Landmark ...
+type Landmark struct {
+	ID        int64
+	CreatedBy string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+
+	Name         string   `json:"name"`
+	NativeName   string   `json:"nativeName"`
+	Class        string   `json:"class"`
+	Description  string   `json:"description"`
+	StartingYear string   `json:"startingYear"`
+	EndingYear   string   `json:"endingYear"`
+	WikiURL      string   `json:"wikiURL"`
+	Location     []string `json:"location"`
+	ImgURLs      []string `json:"imgURL"`
+}

@@ -11,6 +11,8 @@ import (
 // App ...
 type App struct {
 	CurrentUser *db.User
+	Landmark    *db.Landmark
+	Landmarks   []*db.Landmark
 	Session     *scs.SessionManager
 	URL         string
 	CSRFToken   string
@@ -34,6 +36,7 @@ func (d *App) IsUserSignedIn(r *http.Request) bool {
 	if d.Session.GetBool(r.Context(), "signedIn") {
 		return true
 	}
+
 	return false
 }
 

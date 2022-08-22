@@ -7,9 +7,7 @@
     <p>Last login: {{ formatDate .LastLogin }}</p>
     {{ end }}
     <form action="/sign_out" method="post">
-      {{ with . }}
       <input type="hidden" id="csrf_token" name="csrf_token" value="{{.CSRFToken}}"/>
-      {{ end }}
       <label for="submit">
         <input type="submit" id="submit" value="Sign Out"/>
       </label>
@@ -18,7 +16,7 @@
   <div>
     <ul>
       <li><a href="/dashboard">Dashboard</a></li>
-      <li><a href="/sign_in">New</a></li>
+      <li><a href="/landmarks/new">New</a></li>
     </ul>
   </div>
 </nav>

@@ -1,0 +1,47 @@
+{{ define "landmarks_form" }}
+{{ if eq .URL "/landmarks/new" }}
+<form action="/landmarks" method="post">
+{{ else }}
+{{ with .Landmark }}
+<form action="/landmarks/{{ .ID }}" method="put">
+{{ end }}
+{{ end }}
+  <input type="hidden" id="csrf_token" name="csrf_token" value="{{.CSRFToken}}"/>
+  {{ with .Landmark }}
+  <label for="name">
+    <input type="text" id="name" name="name" placeholder="Name" value="{{ .Name }}"/>
+  </label>
+  <label for="native-name">
+    <input type="text" id="native-name" name="native-name" placeholder="Native name" value="{{ .NativeName }}"/>
+  </label>
+  <label for="class">
+    <input type="text" id="class" name="class" placeholder="Class" value="{{ .Class }}"/>
+  </label>
+  <label for="description">
+    <textarea id="description" name="description" placeholder="Description">{{ .Description }}</textarea>
+  </label>
+  <label for="starting-year">
+    <input type="number" id="starting-year" name="starting-year" placeholder="Starting year" min="0" value="{{ .StartingYear }}"/>
+  </label>
+  <label for="ending-year">
+    <input type="number" id="ending-year" name="ending-year" placeholder="Ending year" min="0" value="{{ .EndingYear }}"/>
+  </label>
+  <label for="wiki-url">
+    <input type="text" id="wiki-url" name="wiki-url" placeholder="Wiki URL" value="{{ .WikiURL }}"/>
+  </label>
+  <label for="location">
+    <input type="text" id="location" name="location" placeholder="Location" value="{{ .Location }}"/>
+  </label>
+  <label for="img-urls">
+    <input type="text" id="img-urls" name="img-urls" placeholder="Image URLs" value="{{ .ImgURLs }}"/>
+  </label>
+  {{ end }}
+  <label for="submit">
+    {{ if eq .URL "/landmarks/new" }}
+    <input type="submit" id="submit" value="Create"/>
+    {{ else }}
+    <input type="submit" id="submit" value="Edit"/>
+    {{ end }}
+  </label>
+</form>
+{{ end }}

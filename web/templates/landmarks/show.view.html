@@ -1,0 +1,27 @@
+{{ template "index" . }}
+{{ define "main" }}
+<main>
+  {{ with .Landmark }}
+  <div>
+    <h1>{{ .Name }}</h1>
+    <span>{{ .ID }}</span>
+  </div>
+  <div>
+    <ul>
+      <li>{{ .NativeName }}</li>
+      <li>{{ .Class }}</li>
+      <li>{{ .Description }}</li>
+      <li>{{ .StartingYear }}</li>
+      <li>{{ .EndingYear }}</li>
+      <li><a href="{{ .WikiURL }}">Wikipedia</a></li>
+      <li>{{ .Location }}</li>
+      <li>{{ .ImgURLs }}</li>
+      <li>{{ formatShortDate .CreatedAt }}</li>
+      <li>{{ formatShortDate .UpdatedAt }}</li>
+      <li>{{ .CreatedBy }}</li>
+    </ul>
+  </div>
+  <a href="{{ .ID }}/edit">Edit</a>
+  {{ end }}
+</main>
+{{ end }}

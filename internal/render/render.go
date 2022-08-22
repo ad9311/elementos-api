@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"net/http"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"time"
 
@@ -54,6 +55,9 @@ func WriteView(w http.ResponseWriter, ID string) error {
 	err = v.Execute(buff, App)
 
 	_, err = buff.WriteTo(w)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -122,6 +126,19 @@ func templateFuncMap() template.FuncMap {
 		},
 		"formatShortDate": func(date time.Time) string {
 			return date.Format("2006-Jan-02")
+		},
+		"emptySlice": func(i interface{}) bool {
+			switch reflect.TypeOf(i).Kind() {
+			case reflect.Slice:
+				s := reflect.ValueOf(i)
+				if s.Len() > 0 {
+					return false
+				}
+			default:
+				return true
+			}
+
+			return true
 		},
 	}
 }
