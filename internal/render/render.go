@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"time"
 
-	sess "github.com/ad9311/hitomgr/internal/session"
+	"github.com/ad9311/hitomgr/internal/sess"
 )
 
 const (
@@ -18,13 +18,15 @@ const (
 )
 
 var viewsCache map[string]*template.Template
-var sessionData *sess.Data
+
+// Data ...
+var Data *sess.Data
 var cache bool
 
 // Init ...
-func Init(c bool, s *sess.Data) error {
-	cache = c
-	sessionData = s
+func Init(serverCache bool, sessionData *sess.Data) error {
+	cache = serverCache
+	Data = sessionData
 
 	vc, err := deafultViewsCache()
 	if err != nil {
@@ -48,7 +50,7 @@ func WriteView(w http.ResponseWriter, tmpl string) error {
 	}
 
 	buff := new(bytes.Buffer)
-	err = v.Execute(buff, sessionData)
+	err = v.Execute(buff, Data)
 
 	_, err = buff.WriteTo(w)
 
