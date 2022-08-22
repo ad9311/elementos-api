@@ -24,16 +24,16 @@ func main() {
 		fmt.Println(err)
 	}
 
-	sessionData := sess.Init(config.SeverSecure)
+	app := sess.Init(config.SeverSecure)
 
-	controller.Init(database, sessionData)
+	controller.Init(database, app)
 
-	err = render.Init(config.ServerCache, sessionData)
+	err = render.Init(config.ServerCache, app)
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	server.Init(config, sessionData.Session)
+	server.Init(config, app.Session)
 
 	err = server.New().ListenAndServe()
 	if err != nil {

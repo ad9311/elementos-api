@@ -10,8 +10,8 @@ import (
 
 // GetDashboard ...
 func GetDashboard(w http.ResponseWriter, r *http.Request) {
-	if Data.Session.GetBool(r.Context(), "signedIn") {
-		Data.CSRFToken = nosurf.Token(r)
+	if App.IsUserSignedIn(r) {
+		App.CSRFToken = nosurf.Token(r)
 		if err := render.WriteView(w, "dashboard.view.html"); err != nil {
 			fmt.Println(err)
 		}
