@@ -58,7 +58,7 @@ func (d *Database) InsertUser(r *http.Request, encryptedPassword string) error {
 	query := `INSERT INTO users
 	(first_name,last_name,username,email,password,default_user,
 	last_login,created_at,updated_at)
-	values ($1,$2,$3,$4,$5,$6,$7,$8,$9)
+	values ($1,$2,$3,$4,$5,$6,$7,$8,$9);
 	`
 	_, err := d.Conn.ExecContext(
 		ctx,

@@ -1,24 +1,36 @@
 package val
 
-import "net/http"
+import (
+	"net/http"
+	"strings"
 
-// ValidateLandmark ...
-func ValidateLandmark(r *http.Request) error {
-	// params := []string{
-	// 	"name",
-	// 	"native-name",
-	// 	"class",
-	// 	"description",
-	// 	"starting-year",
-	// 	"ending-year",
-	// 	"wiki-url",
-	// 	"location",
-	// 	"img-urls",
-	// }
+	"github.com/ad9311/hitomgr/internal/db"
+)
 
-	// if err := checkFormParams(r, params); err != nil {
-	// 	return err
-	// }
+// ValidateNewLandmark ...
+func ValidateNewLandmark(dtbs *db.Database, r *http.Request, user *db.User) (*db.Landmark, error) {
+	var lm *db.Landmark
 
-	return nil
+	params := []string{
+		"name",
+		"native-name",
+		"class",
+		"description",
+		"wiki-url",
+		"location",
+		"img-urls",
+	}
+	if err := checkFormParams(r, params); err != nil {
+		return lm, err
+	}
+
+	location := strings.Split(r.PostFormValue("location"), ",")
+	imgURLs := strings.Split(r.PostFormValue("img-urls"), ",")
+	strMap := map[string][]string{"img-urls": imgURLs, "location": location}
+
+	if err := dtbs.InsertLandmark(r, user.ID, strMap); err != nil {
+		return lm, err
+	}
+
+	return lm, nil
 }
