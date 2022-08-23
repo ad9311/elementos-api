@@ -20,7 +20,7 @@ func (d *Database) SelectUserByUsername(r *http.Request) (*User, error) {
 		&user.LastName,
 		&user.Username,
 		&user.Email,
-		&user.EncryptedPassword,
+		&user.HashedPassword,
 		&user.DefaultUser,
 		&user.LastLogin,
 		&user.CreatedAt,
