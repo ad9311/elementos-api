@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/ad9311/hitomgr/internal/render"
+	"github.com/ad9311/hitomgr/internal/validation"
 	"github.com/justinas/nosurf"
 )
 
@@ -24,7 +25,7 @@ func GetSignIn(w http.ResponseWriter, r *http.Request) {
 // PostSignIn ...
 func PostSignIn(w http.ResponseWriter, r *http.Request) {
 	params := []string{"username", "password"}
-	err := validateFormParams(r, params)
+	err := validation.ValidateFormParams(r, params)
 	if err != nil {
 		fmt.Println(err)
 		http.Redirect(w, r, "/sign_in", http.StatusSeeOther)
@@ -39,7 +40,10 @@ func PostSignIn(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = validatePassword(r.PostFormValue("password"), user.EncryptedPassword)
+	err = validation.ValidatePassword(
+		r.PostFormValue("password"),
+		user.EncryptedPassword,
+	)
 	if err != nil {
 		fmt.Println(err)
 		http.Redirect(w, r, "/sign_in", http.StatusSeeOther)
@@ -74,7 +78,7 @@ func GetSignUp(w http.ResponseWriter, r *http.Request) {
 
 // PostSignUp ...
 func PostSignUp(w http.ResponseWriter, r *http.Request) {
-	err := validateSignUpForm(r)
+	err := validation.ValidateSignUpForm(r)
 	if err != nil {
 		fmt.Println(err)
 		http.Redirect(w, r, "/sign_up", http.StatusSeeOther)
@@ -88,7 +92,7 @@ func PostSignUp(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = validateDate(ic.Validity)
+	err = validation.ValidateDateAfter(ic.Validity)
 	if err != nil {
 		fmt.Println(err)
 		http.Redirect(w, r, "/sign_up", http.StatusSeeOther)

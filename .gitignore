@@ -4,3 +4,5 @@
 vendor/
 # Go files
 quick.go
+# SQL
+seed.sql
