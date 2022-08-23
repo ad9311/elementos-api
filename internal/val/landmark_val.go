@@ -1,6 +1,7 @@
 package val
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -9,7 +10,7 @@ import (
 
 // ValidateNewLandmark ...
 func ValidateNewLandmark(dtbs *db.Database, r *http.Request, user *db.User) (*db.Landmark, error) {
-	var lm *db.Landmark
+	var landmark db.Landmark
 
 	params := []string{
 		"name",
@@ -21,16 +22,25 @@ func ValidateNewLandmark(dtbs *db.Database, r *http.Request, user *db.User) (*db
 		"img-urls",
 	}
 	if err := checkFormParams(r, params); err != nil {
-		return lm, err
+		return &landmark, err
 	}
 
 	location := strings.Split(r.PostFormValue("location"), ",")
 	imgURLs := strings.Split(r.PostFormValue("img-urls"), ",")
 	strMap := map[string][]string{"img-urls": imgURLs, "location": location}
 
-	if err := dtbs.InsertLandmark(r, user.ID, strMap); err != nil {
-		return lm, err
+	_, err := dtbs.InsertLandmark(r, user.ID, strMap)
+	if err != nil {
+		return &landmark, err
 	}
 
-	return lm, nil
+	lm, err := dtbs.SelectLandmarkByName(r.PostFormValue("name"))
+	if err != nil {
+		return &landmark, nil
+	}
+	fmt.Println(lm)
+	landmark = *lm
+	landmark.CreatedBy = "jummm"
+
+	return &landmark, nil
 }

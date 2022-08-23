@@ -10,7 +10,7 @@ type User struct {
 	Username       string
 	Email          string
 	HashedPassword string
-	DefaultUser    bool
+	Default        bool
 	LastLogin      time.Time
 	CreatedAt      time.Time
 	UpdatedAt      time.Time
@@ -28,7 +28,9 @@ type InviationCodes struct {
 // Landmark ...
 type Landmark struct {
 	ID        int64
-	CreatedBy string //NOT
+	UserID    int64
+	Default   bool
+	CreatedBy string
 	CreatedAt time.Time
 	UpdatedAt time.Time
 

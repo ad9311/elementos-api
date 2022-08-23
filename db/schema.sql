@@ -47,6 +47,46 @@ ALTER SEQUENCE public.invitation_codes_id_seq OWNED BY public.invitation_codes.i
 
 
 --
+-- Name: landmarks; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.landmarks (
+    id integer NOT NULL,
+    name character varying(60) NOT NULL,
+    native_name character varying(60) NOT NULL,
+    class character varying(60) NOT NULL,
+    description text NOT NULL,
+    wiki_url text NOT NULL,
+    location text[] NOT NULL,
+    img_urls text[] NOT NULL,
+    default_landmark boolean NOT NULL,
+    user_id integer DEFAULT 1 NOT NULL,
+    created_at timestamp with time zone NOT NULL,
+    updated_at timestamp with time zone NOT NULL
+);
+
+
+--
+-- Name: landmarks_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.landmarks_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: landmarks_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.landmarks_id_seq OWNED BY public.landmarks.id;
+
+
+--
 -- Name: schema_migrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -101,6 +141,13 @@ ALTER TABLE ONLY public.invitation_codes ALTER COLUMN id SET DEFAULT nextval('pu
 
 
 --
+-- Name: landmarks id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.landmarks ALTER COLUMN id SET DEFAULT nextval('public.landmarks_id_seq'::regclass);
+
+
+--
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -121,6 +168,30 @@ ALTER TABLE ONLY public.invitation_codes
 
 ALTER TABLE ONLY public.invitation_codes
     ADD CONSTRAINT invitation_codes_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: landmarks landmarks_name_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.landmarks
+    ADD CONSTRAINT landmarks_name_key UNIQUE (name);
+
+
+--
+-- Name: landmarks landmarks_native_name_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.landmarks
+    ADD CONSTRAINT landmarks_native_name_key UNIQUE (native_name);
+
+
+--
+-- Name: landmarks landmarks_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.landmarks
+    ADD CONSTRAINT landmarks_pkey PRIMARY KEY (id);
 
 
 --
@@ -156,6 +227,14 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: landmarks user_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.landmarks
+    ADD CONSTRAINT user_id_fk FOREIGN KEY (user_id) REFERENCES public.users(id) ON UPDATE CASCADE ON DELETE SET DEFAULT;
+
+
+--
 -- PostgreSQL database dump complete
 --
 
@@ -166,4 +245,5 @@ ALTER TABLE ONLY public.users
 
 INSERT INTO public.schema_migrations (version) VALUES
     ('20220820150404'),
-    ('20220820200550');
+    ('20220820200550'),
+    ('20220823051824');

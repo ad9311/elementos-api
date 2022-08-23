@@ -15,7 +15,49 @@ func (d *Database) SelectLandmarkByID(id int64) (*Landmark, error) {
 	landmark := Landmark{}
 	query := "SELECT * FROM landmarks WHERE id=$1;"
 	row := d.Conn.QueryRowContext(ctx, query, id)
-	err := row.Scan()
+	err := row.Scan(
+		&landmark.ID,
+		&landmark.Name,
+		&landmark.NativeName,
+		&landmark.Class,
+		&landmark.Description,
+		&landmark.WikiURL,
+		&landmark.Location,
+		&landmark.ImgURLs,
+		&landmark.Default,
+		&landmark.UserID,
+		&landmark.CreatedAt,
+		&landmark.UpdatedAt,
+	)
+	if err != nil {
+		return &landmark, err
+	}
+
+	return &landmark, nil
+}
+
+// SelectLandmarkByName selects a landmark by its id and returns it.
+func (d *Database) SelectLandmarkByName(name string) (*Landmark, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	landmark := Landmark{}
+	query := "SELECT * FROM landmarks WHERE id=$1;"
+	row := d.Conn.QueryRowContext(ctx, query, name)
+	err := row.Scan(
+		&landmark.ID,
+		&landmark.Name,
+		&landmark.NativeName,
+		&landmark.Class,
+		&landmark.Description,
+		&landmark.WikiURL,
+		&landmark.Location,
+		&landmark.ImgURLs,
+		&landmark.Default,
+		&landmark.UserID,
+		&landmark.CreatedAt,
+		&landmark.UpdatedAt,
+	)
 	if err != nil {
 		return &landmark, err
 	}
@@ -24,26 +66,26 @@ func (d *Database) SelectLandmarkByID(id int64) (*Landmark, error) {
 }
 
 // InsertLandmark inserts a new landmark in the database
-func (d *Database) InsertLandmark(r *http.Request, id int64, strMap map[string][]string) error {
+func (d *Database) InsertLandmark(r *http.Request, id int64, strMap map[string][]string) (int64, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
 	imgURLs, exists := strMap["img-urls"]
 	if !exists {
-		return fmt.Errorf("img-urls is missing")
+		return 0, fmt.Errorf("img-urls is missing")
 	}
 
 	location, exists := strMap["location"]
 	if !exists {
-		return fmt.Errorf("location is missing")
+		return 0, fmt.Errorf("location is missing")
 	}
 
 	query := `INSERT INTO landmarks
 	(name,native_name,class,description,wiki_url,
-	location,img_urls,users_id,created_at,updated_at)
-	values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10);
+	location,img_urls,default_landmark,user_id,created_at,updated_at)
+	values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11);
 	`
-	res, err := d.Conn.ExecContext(
+	_, err := d.Conn.ExecContext(
 		ctx,
 		query,
 		r.PostFormValue("name"),
@@ -53,15 +95,15 @@ func (d *Database) InsertLandmark(r *http.Request, id int64, strMap map[string][
 		r.PostFormValue("wiki-url"),
 		location,
 		imgURLs,
+		false,
 		id,
 		time.Now(),
 		time.Now(),
 	)
-	fmt.Println(res)
 
 	if err != nil {
-		return err
+		return 0, err
 	}
 
-	return nil
+	return 0, nil
 }

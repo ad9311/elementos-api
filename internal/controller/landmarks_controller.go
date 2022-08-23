@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/ad9311/hitomgr/internal/render"
+	"github.com/ad9311/hitomgr/internal/val"
 	"github.com/justinas/nosurf"
 )
 
@@ -48,8 +49,15 @@ func GetNewLandmark(w http.ResponseWriter, r *http.Request) {
 
 // PostNewLandmark ...
 func PostNewLandmark(w http.ResponseWriter, r *http.Request) {
-	path := fmt.Sprintf("/landmarks/%d", App.Landmark.ID)
-	http.Redirect(w, r, path, http.StatusSeeOther)
+	lm, err := val.ValidateNewLandmark(database, r, App.CurrentUser)
+	if err != nil {
+		fmt.Println(err)
+		http.Redirect(w, r, "/landmarks/new", http.StatusSeeOther)
+	} else {
+		App.Landmark = lm
+		path := fmt.Sprintf("/landmarks/%d", App.Landmark.ID)
+		http.Redirect(w, r, path, http.StatusSeeOther)
+	}
 }
 
 // GetEditLandmark ...
