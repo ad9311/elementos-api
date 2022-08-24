@@ -117,3 +117,49 @@ func (d *Database) InsertLandmark(r *http.Request, id int64, strMap map[string][
 
 	return nil
 }
+
+// SelectLandmarks selects all landmarks from the database.
+func (d *Database) SelectLandmarks() ([]*Landmark, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	landmarks := []*Landmark{}
+	landmark := Landmark{}
+	location := ""
+	imgURLs := ""
+	query := "SELECT * FROM landmarks;"
+
+	rows, err := d.Conn.QueryContext(ctx, query)
+	if err != nil {
+		rows.Close()
+		return landmarks, err
+	}
+
+	for rows.Next() {
+		err := rows.Scan(&landmark.ID,
+			&landmark.Name,
+			&landmark.NativeName,
+			&landmark.Class,
+			&landmark.Description,
+			&landmark.WikiURL,
+			&location,
+			&imgURLs,
+			&landmark.Default,
+			&landmark.UserID,
+			&landmark.CreatedAt,
+			&landmark.UpdatedAt,
+		)
+		if err != nil {
+			rows.Close()
+			return landmarks, err
+		}
+
+		lm := landmark
+		lm.Location = pgArrayToSlice(location)
+		lm.ImgURLs = pgArrayToSlice(imgURLs)
+		landmarks = append(landmarks, &lm)
+	}
+	rows.Close()
+
+	return landmarks, nil
+}

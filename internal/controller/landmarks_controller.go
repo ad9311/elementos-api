@@ -14,6 +14,11 @@ func GetDashboard(w http.ResponseWriter, r *http.Request) {
 	if App.IsUserSignedIn(r) {
 		App.CSRFToken = nosurf.Token(r)
 		App.URL = r.URL.String()
+		lms, err := database.SelectLandmarks()
+		if err != nil {
+			fmt.Println(err)
+		}
+		App.Landmarks = lms
 		if err := render.WriteView(w, "landmarks_index"); err != nil {
 			fmt.Println(err)
 		}
