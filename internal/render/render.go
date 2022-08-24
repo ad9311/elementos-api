@@ -121,6 +121,12 @@ func viewID(path string) string {
 
 func templateFuncMap() template.FuncMap {
 	return template.FuncMap{
+		"userSignedIn": func() bool {
+			if App.CurrentUser.SignedIn {
+				return true
+			}
+			return false
+		},
 		"formatDate": func(date time.Time) string {
 			return date.Format("Mon Jan 02, 03:04:05 PM")
 		},

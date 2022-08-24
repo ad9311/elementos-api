@@ -8,7 +8,7 @@ import (
 )
 
 // SelectLandmarkByID selects a landmark by its id and returns it.
-func (d *Database) SelectLandmarkByID(id int64) (*Landmark, error) {
+func (d *Database) SelectLandmarkByID(id int64) (Landmark, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
@@ -32,17 +32,17 @@ func (d *Database) SelectLandmarkByID(id int64) (*Landmark, error) {
 		&landmark.UpdatedAt,
 	)
 	if err != nil {
-		return &landmark, err
+		return landmark, err
 	}
 
 	landmark.Location = pgArrayToSlice(location)
 	landmark.ImgURLs = pgArrayToSlice(imgURLs)
 
-	return &landmark, nil
+	return landmark, nil
 }
 
 // SelectLandmarkByName selects a landmark by its name and returns it.
-func (d *Database) SelectLandmarkByName(name string) (*Landmark, error) {
+func (d *Database) SelectLandmarkByName(name string) (Landmark, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
@@ -66,13 +66,13 @@ func (d *Database) SelectLandmarkByName(name string) (*Landmark, error) {
 		&landmark.UpdatedAt,
 	)
 	if err != nil {
-		return &landmark, err
+		return landmark, err
 	}
 
 	landmark.Location = pgArrayToSlice(location)
 	landmark.ImgURLs = pgArrayToSlice(imgURLs)
 
-	return &landmark, nil
+	return landmark, nil
 }
 
 // InsertLandmark inserts a new landmark in the database

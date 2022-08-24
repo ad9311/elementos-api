@@ -7,7 +7,7 @@ import (
 )
 
 // SelectUserByUsername queries a given user and returns it.
-func (d *Database) SelectUserByUsername(r *http.Request) (*User, error) {
+func (d *Database) SelectUserByUsername(r *http.Request) (User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
@@ -27,25 +27,24 @@ func (d *Database) SelectUserByUsername(r *http.Request) (*User, error) {
 		&user.UpdatedAt,
 	)
 	if err != nil {
-		return &user, err
+		return user, err
 	}
 
-	return &user, nil
+	return user, nil
 }
 
 // UpdateUserLastLogin updates the last_login column in the users table
 // each time a userssigns in.
-func (d *Database) UpdateUserLastLogin(user *User) error {
+func (d *Database) UpdateUserLastLogin(id int64) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
 	query := "UPDATE users SET last_login=$1 WHERE id=$2;"
 	date := time.Now()
-	_, err := d.Conn.ExecContext(ctx, query, date, user.ID)
+	_, err := d.Conn.ExecContext(ctx, query, date, id)
 	if err != nil {
 		return err
 	}
-	user.LastLogin = date
 
 	return nil
 }

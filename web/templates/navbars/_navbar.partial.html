@@ -1,13 +1,13 @@
 {{ define "navbar" }}
-{{ if .CurrentUser }}
+{{ $CSRFToken := .CSRFToken }}
+{{ with .CurrentUser }}
+{{ if .SignedIn }}
 <nav>
   <div>
-    {{ with .CurrentUser }}
     <h2>{{ .FirstName }} {{ .LastName }}</h2>
     <p>Last login: {{ formatDate .LastLogin }}</p>
-    {{ end }}
     <form action="/sign_out" method="post">
-      <input type="hidden" id="csrf_token" name="csrf_token" value="{{.CSRFToken}}"/>
+      <input type="hidden" id="csrf_token" name="csrf_token" value="{{$CSRFToken}}"/>
       <label for="submit">
         <input type="submit" id="submit" value="Sign Out"/>
       </label>
@@ -20,5 +20,6 @@
     </ul>
   </div>
 </nav>
+{{ end }}
 {{ end }}
 {{ end }}

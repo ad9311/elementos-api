@@ -8,8 +8,8 @@ import (
 )
 
 // ValidateNewLandmark ...
-func ValidateNewLandmark(dtbs *db.Database, r *http.Request, user *db.User) (*db.Landmark, error) {
-	var landmark *db.Landmark
+func ValidateNewLandmark(dtbs *db.Database, r *http.Request, user *db.User) (db.Landmark, error) {
+	var landmark db.Landmark
 
 	params := []string{
 		"name",
@@ -37,8 +37,7 @@ func ValidateNewLandmark(dtbs *db.Database, r *http.Request, user *db.User) (*db
 	if err != nil {
 		return landmark, err
 	}
-	landmark = lm
-	landmark.CreatedBy = "jummm"
+	lm.CreatedBy = user.Username
 
-	return landmark, nil
+	return lm, nil
 }

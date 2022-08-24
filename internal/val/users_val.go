@@ -8,8 +8,8 @@ import (
 )
 
 // ValidateUserSignIn ...
-func ValidateUserSignIn(dtbs *db.Database, r *http.Request) (*db.User, error) {
-	var user *db.User
+func ValidateUserSignIn(dtbs *db.Database, r *http.Request) (db.User, error) {
+	var user db.User
 
 	params := []string{"username", "password"}
 	if err := checkFormParams(r, params); err != nil {
@@ -27,7 +27,7 @@ func ValidateUserSignIn(dtbs *db.Database, r *http.Request) (*db.User, error) {
 		return user, err
 	}
 
-	err = dtbs.UpdateUserLastLogin(u)
+	err = dtbs.UpdateUserLastLogin(u.ID)
 	if err != nil {
 		return user, err
 	}

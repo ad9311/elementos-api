@@ -11,6 +11,7 @@ type User struct {
 	Email          string
 	HashedPassword string
 	Default        bool
+	SignedIn       bool
 	LastLogin      time.Time
 	CreatedAt      time.Time
 	UpdatedAt      time.Time

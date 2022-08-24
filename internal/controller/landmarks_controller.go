@@ -54,7 +54,7 @@ func PostNewLandmark(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err)
 		http.Redirect(w, r, "/landmarks/new", http.StatusSeeOther)
 	} else {
-		App.Landmark = lm
+		App.Landmark = &lm
 		path := fmt.Sprintf("/landmarks/%d", App.Landmark.ID)
 		http.Redirect(w, r, path, http.StatusSeeOther)
 	}
