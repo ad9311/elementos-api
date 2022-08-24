@@ -76,18 +76,18 @@ func (d *Database) SelectLandmarkByName(name string) (*Landmark, error) {
 }
 
 // InsertLandmark inserts a new landmark in the database
-func (d *Database) InsertLandmark(r *http.Request, id int64, strMap map[string][]string) (int64, error) {
+func (d *Database) InsertLandmark(r *http.Request, id int64, strMap map[string][]string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
 	imgURLs, exists := strMap["img-urls"]
 	if !exists {
-		return 0, fmt.Errorf("img-urls is missing")
+		return fmt.Errorf("img-urls is missing")
 	}
 
 	location, exists := strMap["location"]
 	if !exists {
-		return 0, fmt.Errorf("location is missing")
+		return fmt.Errorf("location is missing")
 	}
 
 	query := `INSERT INTO landmarks
@@ -112,8 +112,8 @@ func (d *Database) InsertLandmark(r *http.Request, id int64, strMap map[string][
 	)
 
 	if err != nil {
-		return 0, err
+		return err
 	}
 
-	return 0, nil
+	return nil
 }

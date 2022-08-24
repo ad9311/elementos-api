@@ -28,7 +28,7 @@ func ValidateNewLandmark(dtbs *db.Database, r *http.Request, user *db.User) (*db
 	imgURLs := strings.Split(r.PostFormValue("img-urls"), ",")
 	strMap := map[string][]string{"img-urls": imgURLs, "location": location}
 
-	_, err := dtbs.InsertLandmark(r, user.ID, strMap)
+	err := dtbs.InsertLandmark(r, user.ID, strMap)
 	if err != nil {
 		return landmark, err
 	}
