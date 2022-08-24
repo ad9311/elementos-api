@@ -110,7 +110,7 @@ func loadViewsCache() (map[string]*template.Template, error) {
 		vc[viewID(v)] = newView
 	}
 
-	return vc, err
+	return vc, nil
 }
 
 func viewID(path string) string {

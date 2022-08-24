@@ -13,6 +13,8 @@ func (d *Database) SelectLandmarkByID(id int64) (*Landmark, error) {
 	defer cancel()
 
 	landmark := Landmark{}
+	location := ""
+	imgURLs := ""
 	query := "SELECT * FROM landmarks WHERE id=$1;"
 	row := d.Conn.QueryRowContext(ctx, query, id)
 	err := row.Scan(
@@ -22,8 +24,8 @@ func (d *Database) SelectLandmarkByID(id int64) (*Landmark, error) {
 		&landmark.Class,
 		&landmark.Description,
 		&landmark.WikiURL,
-		&landmark.Location,
-		&landmark.ImgURLs,
+		&location,
+		&imgURLs,
 		&landmark.Default,
 		&landmark.UserID,
 		&landmark.CreatedAt,
@@ -33,16 +35,21 @@ func (d *Database) SelectLandmarkByID(id int64) (*Landmark, error) {
 		return &landmark, err
 	}
 
+	landmark.Location = pgArrayToSlice(location)
+	landmark.ImgURLs = pgArrayToSlice(imgURLs)
+
 	return &landmark, nil
 }
 
-// SelectLandmarkByName selects a landmark by its id and returns it.
+// SelectLandmarkByName selects a landmark by its name and returns it.
 func (d *Database) SelectLandmarkByName(name string) (*Landmark, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
 	landmark := Landmark{}
-	query := "SELECT * FROM landmarks WHERE id=$1;"
+	location := ""
+	imgURLs := ""
+	query := "SELECT * FROM landmarks WHERE name=$1;"
 	row := d.Conn.QueryRowContext(ctx, query, name)
 	err := row.Scan(
 		&landmark.ID,
@@ -51,8 +58,8 @@ func (d *Database) SelectLandmarkByName(name string) (*Landmark, error) {
 		&landmark.Class,
 		&landmark.Description,
 		&landmark.WikiURL,
-		&landmark.Location,
-		&landmark.ImgURLs,
+		&location,
+		&imgURLs,
 		&landmark.Default,
 		&landmark.UserID,
 		&landmark.CreatedAt,
@@ -61,6 +68,9 @@ func (d *Database) SelectLandmarkByName(name string) (*Landmark, error) {
 	if err != nil {
 		return &landmark, err
 	}
+
+	landmark.Location = pgArrayToSlice(location)
+	landmark.ImgURLs = pgArrayToSlice(imgURLs)
 
 	return &landmark, nil
 }
