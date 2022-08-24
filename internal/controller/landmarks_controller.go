@@ -31,6 +31,12 @@ func GetDashboard(w http.ResponseWriter, r *http.Request) {
 func GetShowLandmark(w http.ResponseWriter, r *http.Request) {
 	if App.IsUserSignedIn(r) {
 		App.URL = r.URL.String()
+		lm, err := val.ValidateShowLandmark(database, App.URL)
+		if err != nil {
+			fmt.Println(err)
+			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+		}
+		App.Landmark = &lm
 		if err := render.WriteView(w, "landmarks_show"); err != nil {
 			fmt.Println(err)
 		}
