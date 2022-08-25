@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"time"
 )
@@ -82,19 +81,9 @@ func (d *Database) SelectLandmarkByName(name string) (Landmark, error) {
 }
 
 // InsertLandmark inserts a new landmark in the database
-func (d *Database) InsertLandmark(r *http.Request, id int64, strMap map[string][]string) error {
+func (d *Database) InsertLandmark(r *http.Request, formMap map[string]interface{}) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
-
-	imgURLs, exists := strMap["img-urls"]
-	if !exists {
-		return fmt.Errorf("img-urls is missing")
-	}
-
-	location, exists := strMap["location"]
-	if !exists {
-		return fmt.Errorf("location is missing")
-	}
 
 	query := `INSERT INTO landmarks
 	(name,native_name,class,description,wiki_url,
@@ -104,15 +93,15 @@ func (d *Database) InsertLandmark(r *http.Request, id int64, strMap map[string][
 	_, err := d.Conn.ExecContext(
 		ctx,
 		query,
-		r.PostFormValue("name"),
-		r.PostFormValue("native-name"),
-		r.PostFormValue("class"),
-		r.PostFormValue("description"),
-		r.PostFormValue("wiki-url"),
-		location,
-		imgURLs,
+		formMap["name"],
+		formMap["native-name"],
+		formMap["class"],
+		formMap["description"],
+		formMap["wiki-url"],
+		formMap["location"],
+		formMap["img-urls"],
 		false,
-		id,
+		formMap["user-id"],
 		time.Now(),
 		time.Now(),
 	)

@@ -14,6 +14,7 @@ func ValidateNewLandmark(dtbs *db.Database, r *http.Request, user *db.User) (db.
 	var landmark db.Landmark
 
 	params := []string{
+		"user-id",
 		"name",
 		"native-name",
 		"class",
@@ -26,11 +27,13 @@ func ValidateNewLandmark(dtbs *db.Database, r *http.Request, user *db.User) (db.
 		return landmark, err
 	}
 
+	formMap := formToMap(r, params)
 	location := strings.Split(r.PostFormValue("location"), ",")
 	imgURLs := strings.Split(r.PostFormValue("img-urls"), ",")
-	strMap := map[string][]string{"img-urls": imgURLs, "location": location}
+	formMap["location"] = location
+	formMap["img-urls"] = imgURLs
 
-	err := dtbs.InsertLandmark(r, user.ID, strMap)
+	err := dtbs.InsertLandmark(r, formMap)
 	if err != nil {
 		return landmark, err
 	}

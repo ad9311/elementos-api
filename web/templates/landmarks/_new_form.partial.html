@@ -1,6 +1,9 @@
 {{ define "landmarks_new_form" }}
 <form action="/landmarks" id="new_landmark" method="post">
   <input type="hidden" id="csrf_token" name="csrf_token" value="{{ .CSRFToken }}"/>
+  {{ with .CurrentUser }}
+  <input type="hidden" id="user-id" name="user-id" value="{{ .ID }}"/>
+  {{ end }}
   <label for="name">
     <input type="text" id="name" name="name" placeholder="Name"/>
   </label>

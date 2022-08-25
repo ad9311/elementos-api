@@ -60,14 +60,19 @@ func GetNewLandmark(w http.ResponseWriter, r *http.Request) {
 
 // PostNewLandmark ...
 func PostNewLandmark(w http.ResponseWriter, r *http.Request) {
-	lm, err := val.ValidateNewLandmark(database, r, App.CurrentUser)
-	if err != nil {
-		fmt.Println(err)
-		http.Redirect(w, r, "/landmarks/new", http.StatusSeeOther)
+	if r.PostFormValue("user-id") == fmt.Sprintf("%d", App.CurrentUser.ID) {
+		lm, err := val.ValidateNewLandmark(database, r, App.CurrentUser)
+		if err != nil {
+			fmt.Println(err)
+			http.Redirect(w, r, "/landmarks/new", http.StatusSeeOther)
+		} else {
+			App.Landmark = &lm
+			path := fmt.Sprintf("/landmarks/%d", App.Landmark.ID)
+			http.Redirect(w, r, path, http.StatusSeeOther)
+		}
 	} else {
-		App.Landmark = &lm
-		path := fmt.Sprintf("/landmarks/%d", App.Landmark.ID)
-		http.Redirect(w, r, path, http.StatusSeeOther)
+		fmt.Println(fmt.Errorf("incorrect user"))
+		http.Redirect(w, r, "/landmarks/new", http.StatusSeeOther)
 	}
 }
 
