@@ -105,7 +105,6 @@ func (d *Database) InsertLandmark(r *http.Request, formMap map[string]interface{
 		time.Now(),
 		time.Now(),
 	)
-
 	if err != nil {
 		return err
 	}
@@ -122,8 +121,8 @@ func (d *Database) SelectLandmarks() ([]*Landmark, error) {
 	landmark := Landmark{}
 	location := ""
 	imgURLs := ""
-	query := `SELECT landmarks.*,users.username
-	FROM landmarks RIGHT JOIN users ON users.id=landmarks.user_id`
+	query := `SELECT users.username,landmarks.*
+	FROM users INNER JOIN landmarks ON users.id=landmarks.user_id`
 
 	rows, err := d.Conn.QueryContext(ctx, query)
 	if err != nil {
@@ -132,7 +131,9 @@ func (d *Database) SelectLandmarks() ([]*Landmark, error) {
 	}
 
 	for rows.Next() {
-		err := rows.Scan(&landmark.ID,
+		err := rows.Scan(
+			&landmark.CreatedBy,
+			&landmark.ID,
 			&landmark.Name,
 			&landmark.NativeName,
 			&landmark.Class,
@@ -144,7 +145,6 @@ func (d *Database) SelectLandmarks() ([]*Landmark, error) {
 			&landmark.UserID,
 			&landmark.CreatedAt,
 			&landmark.UpdatedAt,
-			&landmark.CreatedBy,
 		)
 		if err != nil {
 			rows.Close()
@@ -182,6 +182,21 @@ func (d *Database) UpdateLandmarkByID(formMap map[string]interface{}) error {
 		time.Now(),
 		formMap["landmark-id"],
 	)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// DeleteLandmarkByID ...
+func (d *Database) DeleteLandmarkByID(id string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := "DELETE FROM landmarks WHERE id=$1"
+
+	_, err := d.Conn.ExecContext(ctx, query, id)
 	if err != nil {
 		return err
 	}

@@ -37,6 +37,7 @@ func routes() http.Handler {
 			r.Get("/", controller.GetShowLandmark)
 			r.Get("/edit", controller.GetEditLandmark)
 			r.Post("/", controller.PostEditLandmark)
+			r.Post("/delete", controller.PostDeleteLandmark)
 		})
 	})
 

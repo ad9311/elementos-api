@@ -61,7 +61,7 @@ func GetNewLandmark(w http.ResponseWriter, r *http.Request) {
 // PostNewLandmark ...
 func PostNewLandmark(w http.ResponseWriter, r *http.Request) {
 	if r.PostFormValue("user-id") == fmt.Sprintf("%d", App.CurrentUser.ID) {
-		lm, err := val.ValidateNewLandmark(database, r, App.CurrentUser)
+		lm, err := val.ValidateNewLandmark(database, r)
 		if err != nil {
 			fmt.Println(err)
 			http.Redirect(w, r, "/landmarks/new", http.StatusSeeOther)
@@ -91,12 +91,32 @@ func GetEditLandmark(w http.ResponseWriter, r *http.Request) {
 
 // PostEditLandmark ...
 func PostEditLandmark(w http.ResponseWriter, r *http.Request) {
-	err := val.ValidateEditLandmark(database, r)
-	if err != nil {
-		fmt.Println(err)
-		http.Redirect(w, r, r.URL.String(), http.StatusSeeOther)
+	if r.PostFormValue("user-id") == fmt.Sprintf("%d", App.CurrentUser.ID) {
+		err := val.ValidateEditLandmark(database, r)
+		if err != nil {
+			fmt.Println(err)
+			http.Redirect(w, r, r.URL.String(), http.StatusSeeOther)
+		} else {
+			path := fmt.Sprintf("/landmarks/%s", r.PostFormValue("landmark-id"))
+			http.Redirect(w, r, path, http.StatusSeeOther)
+		}
 	} else {
-		path := fmt.Sprintf("/landmarks/%s", r.PostFormValue("landmark-id"))
-		http.Redirect(w, r, path, http.StatusSeeOther)
+		fmt.Println(fmt.Errorf("incorrect user"))
+		http.Redirect(w, r, r.URL.String(), http.StatusSeeOther)
+	}
+}
+
+// PostDeleteLandmark ...
+func PostDeleteLandmark(w http.ResponseWriter, r *http.Request) {
+	if r.PostFormValue("user-id") == fmt.Sprintf("%d", App.CurrentUser.ID) {
+		err := val.ValidateDeleteLandmark(database, r)
+		if err != nil {
+			fmt.Println(err)
+			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+		}
+		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+	} else {
+		fmt.Println(fmt.Errorf("incorrect user"))
+		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 	}
 }

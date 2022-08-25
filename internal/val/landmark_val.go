@@ -10,7 +10,7 @@ import (
 )
 
 // ValidateNewLandmark ...
-func ValidateNewLandmark(dtbs *db.Database, r *http.Request, user *db.User) (db.Landmark, error) {
+func ValidateNewLandmark(dtbs *db.Database, r *http.Request) (db.Landmark, error) {
 	var landmark db.Landmark
 
 	params := []string{
@@ -72,6 +72,7 @@ func ValidateShowLandmark(dtbs *db.Database, urlStr string) (db.Landmark, error)
 // ValidateEditLandmark ...
 func ValidateEditLandmark(dtbs *db.Database, r *http.Request) error {
 	params := []string{
+		"user-id",
 		"landmark-id",
 		"name",
 		"native-name",
@@ -92,6 +93,23 @@ func ValidateEditLandmark(dtbs *db.Database, r *http.Request) error {
 	formMap["img-urls"] = imgURLs
 
 	if err := dtbs.UpdateLandmarkByID(formMap); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// ValidateDeleteLandmark ...
+func ValidateDeleteLandmark(dtbs *db.Database, r *http.Request) error {
+	params := []string{
+		"user-id",
+		"landmark-id",
+	}
+	if err := checkFormParams(r, params); err != nil {
+		return err
+	}
+
+	if err := dtbs.DeleteLandmarkByID(r.PostFormValue("landmark-id")); err != nil {
 		return err
 	}
 
