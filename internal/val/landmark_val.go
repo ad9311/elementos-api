@@ -39,7 +39,6 @@ func ValidateNewLandmark(dtbs *db.Database, r *http.Request, user *db.User) (db.
 	if err != nil {
 		return landmark, err
 	}
-	lm.CreatedBy = user.Username
 
 	return lm, nil
 }

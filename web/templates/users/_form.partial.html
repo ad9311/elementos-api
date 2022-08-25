@@ -4,7 +4,7 @@
 {{ else }}
 <form action="/sign_up" id="sign_up" method="post">
 {{ end }}
-  <input type="hidden" id="csrf_token" name="csrf_token" value="{{.CSRFToken}}"/>
+  <input type="hidden" id="csrf_token" name="csrf_token" value="{{ .CSRFToken }}"/>
   {{ if eq .URL "/sign_up" }}
   <label for="first-name">
     <input type="text" id="first-name" name="first-name" placeholder="First Name" required/>

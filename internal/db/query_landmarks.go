@@ -15,7 +15,9 @@ func (d *Database) SelectLandmarkByID(id int64) (Landmark, error) {
 	landmark := Landmark{}
 	location := ""
 	imgURLs := ""
-	query := "SELECT * FROM landmarks WHERE id=$1;"
+	query := `SELECT landmarks.*,users.username
+	FROM landmarks RIGHT JOIN users ON users.id=landmarks.user_id WHERE landmarks.id=$1`
+
 	row := d.Conn.QueryRowContext(ctx, query, id)
 	err := row.Scan(
 		&landmark.ID,
@@ -30,6 +32,7 @@ func (d *Database) SelectLandmarkByID(id int64) (Landmark, error) {
 		&landmark.UserID,
 		&landmark.CreatedAt,
 		&landmark.UpdatedAt,
+		&landmark.CreatedBy,
 	)
 	if err != nil {
 		return landmark, err
@@ -49,7 +52,9 @@ func (d *Database) SelectLandmarkByName(name string) (Landmark, error) {
 	landmark := Landmark{}
 	location := ""
 	imgURLs := ""
-	query := "SELECT * FROM landmarks WHERE name=$1;"
+	query := `SELECT landmarks.*,users.username
+	FROM landmarks RIGHT JOIN users ON users.id=landmarks.user_id WHERE landmarks.name=$1`
+
 	row := d.Conn.QueryRowContext(ctx, query, name)
 	err := row.Scan(
 		&landmark.ID,
@@ -64,6 +69,7 @@ func (d *Database) SelectLandmarkByName(name string) (Landmark, error) {
 		&landmark.UserID,
 		&landmark.CreatedAt,
 		&landmark.UpdatedAt,
+		&landmark.CreatedBy,
 	)
 	if err != nil {
 		return landmark, err
@@ -127,7 +133,8 @@ func (d *Database) SelectLandmarks() ([]*Landmark, error) {
 	landmark := Landmark{}
 	location := ""
 	imgURLs := ""
-	query := "SELECT * FROM landmarks;"
+	query := `SELECT landmarks.*,users.username
+	FROM landmarks RIGHT JOIN users ON users.id=landmarks.user_id`
 
 	rows, err := d.Conn.QueryContext(ctx, query)
 	if err != nil {
@@ -148,6 +155,7 @@ func (d *Database) SelectLandmarks() ([]*Landmark, error) {
 			&landmark.UserID,
 			&landmark.CreatedAt,
 			&landmark.UpdatedAt,
+			&landmark.CreatedBy,
 		)
 		if err != nil {
 			rows.Close()
