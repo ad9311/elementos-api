@@ -11,14 +11,22 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-func retrieveIDFromURL(urlStr string) (int64, error) {
+func retrieveIDFromURL(urlStr string, model string) (int64, error) {
 	url, err := url.Parse(urlStr)
 	if err != nil {
 		return 0, err
 	}
 
+	var id string
 	urlSlice := strings.Split(url.Path, "/")
-	id := urlSlice[len(urlSlice)-1]
+	for i, v := range urlSlice {
+		if v == model {
+			if len(urlSlice) > i+1 {
+				id = urlSlice[i+1]
+			}
+		}
+	}
+
 	i, err := strconv.Atoi(id)
 	if err != nil {
 		return 0, err

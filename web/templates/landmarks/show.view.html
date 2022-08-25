@@ -23,9 +23,6 @@
   <form action="/landmarks/{{ .ID }}/delete" id="delete_landmark" method="post">
     {{ end }}
     <input type="hidden" id="csrf_token" name="csrf_token" value="{{ .CSRFToken }}"/>
-    {{ with .Landmark }}
-    <input type="hidden" id="landmark-id" name="landmark-id" value="{{ .ID }}"/>
-    {{ end }}
     <label for="submit">
       <input type="submit" id="submit" value="Delete"/>
     </label>

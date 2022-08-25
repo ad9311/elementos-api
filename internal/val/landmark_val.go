@@ -3,7 +3,6 @@ package val
 import (
 	"fmt"
 	"net/http"
-	"strconv"
 	"strings"
 
 	"github.com/ad9311/hitomgr/internal/db"
@@ -49,7 +48,7 @@ func ValidateNewLandmark(dtbs *db.Database, r *http.Request, id int64) (db.Landm
 // ValidateShowLandmark ...
 func ValidateShowLandmark(dtbs *db.Database, urlStr string) (db.Landmark, error) {
 	landmark := db.Landmark{}
-	i, err := retrieveIDFromURL(urlStr)
+	i, err := retrieveIDFromURL(urlStr, "landmarks")
 	if err != nil {
 		return landmark, err
 	}
@@ -93,23 +92,16 @@ func ValidateEditLandmark(dtbs *db.Database, r *http.Request) error {
 
 // ValidateDeleteLandmark ...
 func ValidateDeleteLandmark(dtbs *db.Database, r *http.Request, id int64) error {
-	params := []string{
-		"landmark-id",
-	}
-	if err := checkFormParams(r, params); err != nil {
-		return err
-	}
-
-	fID, err := strconv.Atoi(r.PostFormValue("landmark-id"))
+	fID, err := retrieveIDFromURL(r.URL.String(), "landmarks")
 	if err != nil {
 		return err
 	}
 
-	if id != int64(fID) {
+	if id != fID {
 		return fmt.Errorf("form error with current landmark id")
 	}
 
-	if err := dtbs.DeleteLandmarkByID(r.PostFormValue("landmark-id")); err != nil {
+	if err := dtbs.DeleteLandmarkByID(fID); err != nil {
 		return err
 	}
 

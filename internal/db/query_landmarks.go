@@ -190,7 +190,7 @@ func (d *Database) UpdateLandmarkByID(formMap map[string]interface{}) error {
 }
 
 // DeleteLandmarkByID ...
-func (d *Database) DeleteLandmarkByID(id string) error {
+func (d *Database) DeleteLandmarkByID(id int64) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
