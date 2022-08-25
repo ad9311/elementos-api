@@ -3,9 +3,6 @@
 <form action="/landmarks/{{ .ID }}" id="edit_landmark" method="post">
   {{ end }}
   <input type="hidden" id="csrf_token" name="csrf_token" value="{{ .CSRFToken }}"/>
-  {{ with .CurrentUser }}
-  <input type="hidden" id="user-id" name="user-id" value="{{ .ID }}"/>
-  {{ end }}
   {{ with .Landmark }}
   <input type="hidden" id="landmark-id" name="landmark-id" value="{{ .ID }}"/>
   <label for="name">

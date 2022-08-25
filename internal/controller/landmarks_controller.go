@@ -60,19 +60,14 @@ func GetNewLandmark(w http.ResponseWriter, r *http.Request) {
 
 // PostNewLandmark ...
 func PostNewLandmark(w http.ResponseWriter, r *http.Request) {
-	if r.PostFormValue("user-id") == fmt.Sprintf("%d", App.CurrentUser.ID) {
-		lm, err := val.ValidateNewLandmark(database, r)
-		if err != nil {
-			fmt.Println(err)
-			http.Redirect(w, r, "/landmarks/new", http.StatusSeeOther)
-		} else {
-			App.Landmark = &lm
-			path := fmt.Sprintf("/landmarks/%d", App.Landmark.ID)
-			http.Redirect(w, r, path, http.StatusSeeOther)
-		}
-	} else {
-		fmt.Println(fmt.Errorf("incorrect user"))
+	lm, err := val.ValidateNewLandmark(database, r, App.CurrentUser.ID)
+	if err != nil {
+		fmt.Println(err)
 		http.Redirect(w, r, "/landmarks/new", http.StatusSeeOther)
+	} else {
+		App.Landmark = &lm
+		path := fmt.Sprintf("/landmarks/%d", App.Landmark.ID)
+		http.Redirect(w, r, path, http.StatusSeeOther)
 	}
 }
 
@@ -91,32 +86,23 @@ func GetEditLandmark(w http.ResponseWriter, r *http.Request) {
 
 // PostEditLandmark ...
 func PostEditLandmark(w http.ResponseWriter, r *http.Request) {
-	if r.PostFormValue("user-id") == fmt.Sprintf("%d", App.CurrentUser.ID) {
-		err := val.ValidateEditLandmark(database, r)
-		if err != nil {
-			fmt.Println(err)
-			http.Redirect(w, r, r.URL.String(), http.StatusSeeOther)
-		} else {
-			path := fmt.Sprintf("/landmarks/%s", r.PostFormValue("landmark-id"))
-			http.Redirect(w, r, path, http.StatusSeeOther)
-		}
-	} else {
-		fmt.Println(fmt.Errorf("incorrect user"))
+	err := val.ValidateEditLandmark(database, r)
+	if err != nil {
+		fmt.Println(err)
 		http.Redirect(w, r, r.URL.String(), http.StatusSeeOther)
+	} else {
+		path := fmt.Sprintf("/landmarks/%s", r.PostFormValue("landmark-id"))
+		http.Redirect(w, r, path, http.StatusSeeOther)
 	}
 }
 
 // PostDeleteLandmark ...
 func PostDeleteLandmark(w http.ResponseWriter, r *http.Request) {
-	if r.PostFormValue("user-id") == fmt.Sprintf("%d", App.CurrentUser.ID) {
-		err := val.ValidateDeleteLandmark(database, r)
-		if err != nil {
-			fmt.Println(err)
-			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
-		}
+	err := val.ValidateDeleteLandmark(database, r, App.Landmark.ID)
+	if err != nil {
+		fmt.Println(err)
 		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 	} else {
-		fmt.Println(fmt.Errorf("incorrect user"))
 		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 	}
 }

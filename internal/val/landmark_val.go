@@ -1,8 +1,8 @@
 package val
 
 import (
+	"fmt"
 	"net/http"
-	"net/url"
 	"strconv"
 	"strings"
 
@@ -10,11 +10,10 @@ import (
 )
 
 // ValidateNewLandmark ...
-func ValidateNewLandmark(dtbs *db.Database, r *http.Request) (db.Landmark, error) {
+func ValidateNewLandmark(dtbs *db.Database, r *http.Request, id int64) (db.Landmark, error) {
 	var landmark db.Landmark
 
 	params := []string{
-		"user-id",
 		"name",
 		"native-name",
 		"class",
@@ -32,6 +31,7 @@ func ValidateNewLandmark(dtbs *db.Database, r *http.Request) (db.Landmark, error
 	imgURLs := strings.Split(r.PostFormValue("img-urls"), ",")
 	formMap["location"] = location
 	formMap["img-urls"] = imgURLs
+	formMap["user-id"] = id
 
 	err := dtbs.InsertLandmark(r, formMap)
 	if err != nil {
@@ -49,14 +49,7 @@ func ValidateNewLandmark(dtbs *db.Database, r *http.Request) (db.Landmark, error
 // ValidateShowLandmark ...
 func ValidateShowLandmark(dtbs *db.Database, urlStr string) (db.Landmark, error) {
 	landmark := db.Landmark{}
-	url, err := url.Parse(urlStr)
-	if err != nil {
-		return landmark, err
-	}
-
-	urlSlice := strings.Split(url.Path, "/")
-	id := urlSlice[len(urlSlice)-1]
-	i, err := strconv.Atoi(id)
+	i, err := retrieveIDFromURL(urlStr)
 	if err != nil {
 		return landmark, err
 	}
@@ -72,7 +65,6 @@ func ValidateShowLandmark(dtbs *db.Database, urlStr string) (db.Landmark, error)
 // ValidateEditLandmark ...
 func ValidateEditLandmark(dtbs *db.Database, r *http.Request) error {
 	params := []string{
-		"user-id",
 		"landmark-id",
 		"name",
 		"native-name",
@@ -100,13 +92,21 @@ func ValidateEditLandmark(dtbs *db.Database, r *http.Request) error {
 }
 
 // ValidateDeleteLandmark ...
-func ValidateDeleteLandmark(dtbs *db.Database, r *http.Request) error {
+func ValidateDeleteLandmark(dtbs *db.Database, r *http.Request, id int64) error {
 	params := []string{
-		"user-id",
 		"landmark-id",
 	}
 	if err := checkFormParams(r, params); err != nil {
 		return err
+	}
+
+	fID, err := strconv.Atoi(r.PostFormValue("landmark-id"))
+	if err != nil {
+		return err
+	}
+
+	if id != int64(fID) {
+		return fmt.Errorf("form error with current landmark id")
 	}
 
 	if err := dtbs.DeleteLandmarkByID(r.PostFormValue("landmark-id")); err != nil {

@@ -3,10 +3,29 @@ package val
 import (
 	"fmt"
 	"net/http"
+	"net/url"
+	"strconv"
+	"strings"
 	"time"
 
 	"golang.org/x/crypto/bcrypt"
 )
+
+func retrieveIDFromURL(urlStr string) (int64, error) {
+	url, err := url.Parse(urlStr)
+	if err != nil {
+		return 0, err
+	}
+
+	urlSlice := strings.Split(url.Path, "/")
+	id := urlSlice[len(urlSlice)-1]
+	i, err := strconv.Atoi(id)
+	if err != nil {
+		return 0, err
+	}
+
+	return int64(i), nil
+}
 
 func formToMap(r *http.Request, params []string) map[string]interface{} {
 	formMap := make(map[string]interface{}, 0)
