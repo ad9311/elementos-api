@@ -86,6 +86,12 @@ func GetEditLandmark(w http.ResponseWriter, r *http.Request) {
 
 // PostEditLandmark ...
 func PostEditLandmark(w http.ResponseWriter, r *http.Request) {
-	path := fmt.Sprintf("/landmarks/%d", App.Landmark.ID)
-	http.Redirect(w, r, path, http.StatusSeeOther)
+	err := val.ValidateEditLandmark(database, r)
+	if err != nil {
+		fmt.Println(err)
+		http.Redirect(w, r, r.URL.String(), http.StatusSeeOther)
+	} else {
+		path := fmt.Sprintf("/landmarks/%s", r.PostFormValue("landmark-id"))
+		http.Redirect(w, r, path, http.StatusSeeOther)
+	}
 }

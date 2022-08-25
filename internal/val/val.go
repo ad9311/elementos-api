@@ -8,6 +8,16 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+func formToMap(r *http.Request, params []string) map[string]interface{} {
+	formMap := make(map[string]interface{}, 0)
+
+	for _, k := range params {
+		formMap[k] = r.PostFormValue(k)
+	}
+
+	return formMap
+}
+
 func checkFormParams(r *http.Request, params []string) error {
 	err := r.ParseForm()
 	if err != nil {

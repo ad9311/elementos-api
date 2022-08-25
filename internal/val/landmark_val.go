@@ -65,3 +65,32 @@ func ValidateShowLandmark(dtbs *db.Database, urlStr string) (db.Landmark, error)
 
 	return lm, nil
 }
+
+// ValidateEditLandmark ...
+func ValidateEditLandmark(dtbs *db.Database, r *http.Request) error {
+	params := []string{
+		"landmark-id",
+		"name",
+		"native-name",
+		"class",
+		"description",
+		"wiki-url",
+		"location",
+		"img-urls",
+	}
+	if err := checkFormParams(r, params); err != nil {
+		return err
+	}
+
+	formMap := formToMap(r, params)
+	location := strings.Split(r.PostFormValue("location"), ",")
+	imgURLs := strings.Split(r.PostFormValue("img-urls"), ",")
+	formMap["location"] = location
+	formMap["img-urls"] = imgURLs
+
+	if err := dtbs.UpdateLandmarkByID(formMap); err != nil {
+		return err
+	}
+
+	return nil
+}

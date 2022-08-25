@@ -4,7 +4,7 @@
   {{ end }}
   <input type="hidden" id="csrf_token" name="csrf_token" value="{{ .CSRFToken }}"/>
   {{ with .Landmark }}
-  <input type="hidden" id="landmark_id" name="landmark_id" value="{{ .ID }}"/>
+  <input type="hidden" id="landmark-id" name="landmark-id" value="{{ .ID }}"/>
   <label for="name">
     <input type="text" id="name" name="name" placeholder="Name" value="{{ .Name }}"/>
   </label>

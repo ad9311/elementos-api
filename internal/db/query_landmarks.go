@@ -171,3 +171,31 @@ func (d *Database) SelectLandmarks() ([]*Landmark, error) {
 
 	return landmarks, nil
 }
+
+// UpdateLandmarkByID ...
+func (d *Database) UpdateLandmarkByID(formMap map[string]interface{}) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `UPDATE landmarks SET name=$1,native_name=$2,class=$3,description=$4,wiki_url=$5,
+	location=$6,img_urls=$7,updated_at=$8 WHERE id=$9`
+
+	_, err := d.Conn.ExecContext(
+		ctx,
+		query,
+		formMap["name"],
+		formMap["native-name"],
+		formMap["class"],
+		formMap["description"],
+		formMap["wiki-url"],
+		formMap["location"],
+		formMap["img-urls"],
+		time.Now(),
+		formMap["landmark-id"],
+	)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
