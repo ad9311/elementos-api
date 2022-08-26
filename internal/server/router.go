@@ -14,24 +14,24 @@ func routes() http.Handler {
 	mux.Use(loadSession)
 	mux.Use(newCSRF)
 
-	mux.Get("/sign_in", ctrl.GetSignIn)
+	// Root
+	mux.Get("/", ctrl.GetRoot)
 
-	// // Root
-	// mux.Get("/", controller.GetRoot)
+	// Sessions
+	mux.Route("/sign_in", func(r chi.Router) {
+		r.Get("/", ctrl.GetSignIn)
+		r.Post("/", ctrl.PostSignIn)
+	})
+	mux.Post("/sign_out", ctrl.PostSignOut)
 
-	// // Users
-	// mux.Route("/sign_in", func(r chi.Router) {
-	// 	r.Get("/", controller.GetSignIn)
-	// 	r.Post("/", controller.PostSignIn)
-	// })
+	// Registrations
 	// mux.Route("/sign_up", func(r chi.Router) {
 	// 	r.Get("/", controller.GetSignUp)
 	// 	r.Post("/", controller.PostSignUp)
 	// })
-	// mux.Post("/sign_out", controller.PostSignOut)
 
 	// // Landmarks
-	// mux.Get("/dashboard", controller.GetDashboard)
+	mux.Get("/dashboard", ctrl.GetDashboard)
 	// mux.Route("/landmarks", func(r chi.Router) {
 	// 	r.Post("/", controller.PostNewLandmark)
 	// 	r.Get("/new", controller.GetNewLandmark)
