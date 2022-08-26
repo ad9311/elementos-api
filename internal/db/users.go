@@ -53,7 +53,7 @@ func (d *Database) InsertUser(formMap map[string]string) error {
 	query := `INSERT INTO users
 	(first_name,last_name,username,password,
 	last_login,created_at,updated_at)
-	values ($1,$2,$3,$4,$5,$6,$7,$8,$9);
+	values ($1,$2,$3,$4,$5,$6,$7);
 	`
 	_, err := d.Conn.ExecContext(
 		ctx,
@@ -61,7 +61,7 @@ func (d *Database) InsertUser(formMap map[string]string) error {
 		formMap["first_name"],
 		formMap["last_name"],
 		formMap["username"],
-		formMap["password"],
+		formMap["hashed_password"],
 		time.Now(),
 		time.Now(),
 		time.Now(),

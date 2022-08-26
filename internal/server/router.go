@@ -25,10 +25,10 @@ func routes() http.Handler {
 	mux.Post("/sign_out", ctrl.PostSignOut)
 
 	// Registrations
-	// mux.Route("/sign_up", func(r chi.Router) {
-	// 	r.Get("/", controller.GetSignUp)
-	// 	r.Post("/", controller.PostSignUp)
-	// })
+	mux.Route("/sign_up", func(r chi.Router) {
+		r.Get("/", ctrl.GetSignUp)
+		r.Post("/", ctrl.PostSignUp)
+	})
 
 	// // Landmarks
 	mux.Get("/dashboard", ctrl.GetDashboard)
