@@ -9,6 +9,7 @@ require (
 	github.com/joho/godotenv v1.4.0
 	github.com/justinas/nosurf v1.1.1
 	github.com/pelletier/go-toml v1.9.5
+	golang.org/x/crypto v0.0.0-20220824171710-5757bc0c5503
 )
 
 require (
@@ -19,6 +20,5 @@ require (
 	github.com/jackc/pgproto3/v2 v2.3.1 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b // indirect
 	github.com/jackc/pgtype v1.12.0 // indirect
-	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa // indirect
 	golang.org/x/text v0.3.7 // indirect
 )

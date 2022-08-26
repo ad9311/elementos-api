@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
-	"os"
 	"path/filepath"
 	"strings"
 )
@@ -33,7 +32,7 @@ func SetUp(serverCache bool) error {
 }
 
 // WriteView ...
-func WriteView(w http.ResponseWriter, key string, i interface{}) error {
+func WriteView(w http.ResponseWriter, key string, data interface{}) error {
 	templateMap, err := deafultViewsCache()
 	if err != nil {
 		return err
@@ -43,9 +42,9 @@ func WriteView(w http.ResponseWriter, key string, i interface{}) error {
 	if !exist {
 		return fmt.Errorf("template %s does not exist", key)
 	}
-	v.Execute(os.Stdout, i)
+
 	buff := new(bytes.Buffer)
-	err = v.Execute(buff, i)
+	err = v.Execute(buff, data)
 
 	_, err = buff.WriteTo(w)
 	if err != nil {

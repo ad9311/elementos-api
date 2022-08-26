@@ -1,2 +1,7 @@
-{{ define "navbar" }}
-{{ end }}
+{{define "navbar"}}
+{{if .CurrentUser}}
+{{with .CurrentUser}}
+<p>{{.FirstName}}</p>
+{{end}}
+{{end}}
+{{end}}
