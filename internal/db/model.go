@@ -4,14 +4,15 @@ import "time"
 
 // User ...
 type User struct {
-	ID        int64
-	FirstName string
-	LastName  string
-	Username  string
-	Default   bool
-	LastLogin time.Time
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID             int64
+	FirstName      string
+	LastName       string
+	Username       string
+	HashedPassword string
+	Default        bool
+	LastLogin      time.Time
+	CreatedAt      time.Time
+	UpdatedAt      time.Time
 }
 
 // Landmark ...
