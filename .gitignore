@@ -1,0 +1,8 @@
+# Local environment
+.env
+seed.sql
+# Directories
+/vendor/
+/node_modules/
+# Go files
+quick.go
