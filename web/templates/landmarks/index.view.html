@@ -1,0 +1,11 @@
+{{template "index" .}}
+{{define "main"}}
+<main>
+  <h1>HITO Manager</h1>
+  <h2>Dashboard</h2>
+  <form id="sign_out" action="/sign_out" method="post">
+    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+    <input type="submit" name="submit" value="Sign Out"/>
+  </form>
+</main>
+{{end}}
