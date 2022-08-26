@@ -15,6 +15,15 @@ type User struct {
 	UpdatedAt      time.Time
 }
 
+// Inviation ...
+type Inviation struct {
+	ID        int64
+	Code      string
+	ExpiresAt time.Time
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
 // Landmark ...
 type Landmark struct {
 	ID        int64
