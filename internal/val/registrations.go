@@ -22,21 +22,21 @@ func ValidateUserSignUp(dtbs *db.Database, r *http.Request) error {
 	}
 	formMap := formToMap(r, params)
 
+	inviation, err := dtbs.SelectInvitation(formMap["invitation_code"])
+	if err != nil {
+		return err
+	}
+
+	if err = checkDateAfter(inviation.ExpiresAt); err != nil {
+		return err
+	}
+
 	if err := checkPasswordConfirmation(
 		formMap["password"],
 		formMap["password_confirmation"],
 	); err != nil {
 		return err
 	}
-
-	// invCode, err := dtbs.SelectInvitationCode(formMap["invitation_code"])
-	// if err != nil {
-	// 	return err
-	// }
-
-	// if err = checkDateAfter(invCode.Validity); err != nil {
-	// 	return err
-	// }
 
 	hashedPassword, err := bcrypt.GenerateFromPassword(
 		[]byte(formMap["password"]),
