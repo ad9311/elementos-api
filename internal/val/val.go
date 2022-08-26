@@ -35,8 +35,8 @@ func retrieveIDFromURL(urlStr string, model string) (int64, error) {
 	return int64(i), nil
 }
 
-func formToMap(r *http.Request, params []string) map[string]interface{} {
-	formMap := make(map[string]interface{}, 0)
+func formToMap(r *http.Request, params []string) map[string]string {
+	formMap := make(map[string]string)
 
 	for _, k := range params {
 		formMap[k] = r.PostFormValue(k)
@@ -66,7 +66,7 @@ func checkFormParams(r *http.Request, params []string) error {
 
 func checkPasswordConfirmation(password string, passwordConfirmation string) error {
 	if password != passwordConfirmation {
-		return fmt.Errorf("passwords don't match")
+		return fmt.Errorf("passwords mismatch")
 	}
 	return nil
 }

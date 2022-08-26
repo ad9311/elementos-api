@@ -1,0 +1,17 @@
+{{template "index" .}}
+{{define "main"}}
+<main>
+  <h1>HITO Manager</h1>
+  <h2>Sign Up</h2>
+  <form id="sign_up" action="/sign_up" method="post">
+    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+    <input type="text" name="first_name"/>
+    <input type="text" name="last_name"/>
+    <input type="text" name="username"/>
+    <input type="password" name="password"/>
+    <input type="password" name="password_confirmation"/>
+    <input type="text" name="invitation_code"/>
+    <input type="submit" name="submit" value="Sign Up"/>
+  </form>
+</main>
+{{end}}
