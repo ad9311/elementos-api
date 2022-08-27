@@ -90,3 +90,16 @@ func checkDateAfter(date time.Time) error {
 
 	return nil
 }
+
+func checkUserID(formUserID string, userID int64) error {
+	id, err := strconv.Atoi(formUserID)
+	if err != nil {
+		return err
+	}
+
+	if userID != int64(id) {
+		return fmt.Errorf("user not allowed")
+	}
+
+	return nil
+}

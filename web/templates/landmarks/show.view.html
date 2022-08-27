@@ -1,10 +1,16 @@
 {{template "index" .}}
 {{define "main"}}
+{{$CSRFToken := .CSRFToken}}
 <main>
   <h1>HITO Manager</h1>
   {{with .Landmark}}
   <h2>{{.Name}}</h2>
   <a href="/landmarks/{{.ID}}/edit">Edit</a>
+  <form action="/landmarks/{{.ID}}/delete" method="post">
+    <input type="hidden" id="csrf_token" name="csrf_token" value="{{$CSRFToken}}"/>
+    <input type="hidden" name="landmark_id" value="{{.ID}}">
+    <input type="submit" name="submit" value="Delete">
+  </form>
   {{end}}
 </main>
 {{end}}
