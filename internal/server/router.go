@@ -37,8 +37,8 @@ func routes() http.Handler {
 		r.Get("/new", ctrl.GetNewLandmark)
 		r.Route("/{landmarkID}", func(r chi.Router) {
 			r.Get("/", ctrl.GetShowLandmark)
-			// 	r.Get("/edit", controller.GetEditLandmark)
-			// 	r.Post("/", controller.PostEditLandmark)
+			r.Get("/edit", ctrl.GetEditLandmark)
+			r.Post("/", ctrl.PostEditLandmark)
 			// 	r.Post("/delete", controller.PostDeleteLandmark)
 		})
 	})
