@@ -12,9 +12,14 @@ import (
 // GetDashboard ...
 func GetDashboard(w http.ResponseWriter, r *http.Request) {
 	if session.GetBool(r.Context(), "user_signed_in") {
+		landmarks, err := database.SelectLandmarks()
+		if err != nil {
+			fmt.Println(err)
+		}
 		appMap := make(map[string]interface{})
 		appMap["CSRFToken"] = nosurf.Token(r)
 		appMap["CurrentUser"] = currentUser(r)
+		appMap["Landmarks"] = landmarks
 		if err := render.WriteView(w, "landmarks_index", appMap); err != nil {
 			fmt.Println(err)
 		}
