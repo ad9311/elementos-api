@@ -1,0 +1,22 @@
+{{template "index" .}}
+{{define "main"}}
+{{$CSRFToken := .CSRFToken}}
+<main>
+  <h1>HITO Manager</h1>
+  {{with .Landmark}}
+  <h2>Edit {{.Name}}</h2>
+  <form id="edit_landmark" action="/landmarks/{{.ID}}" method="post">
+    <input type="hidden" name="csrf_token" value="{{$CSRFToken}}">
+    <input type="hidden" name="landmark_id" value="{{.ID}}">
+    <input type="text" name="name" value="{{.Name}}">
+    <input type="text" name="native_name" value="{{.NativeName}}">
+    <input type="text" name="category" value="{{.Category}}">
+    <textarea name="description">{{.Description}}</textarea>
+    <input type="text" name="wiki_url" value="{{.WikiURL}}">
+    <input type="text" name="location" value="{{.Location}}">
+    <input type="text" name="img_urls" value="{{.ImgURLs}}">
+    <input type="submit" name="submit" value="Create"/>
+  </form>
+  {{end}}
+</main>
+{{end}}

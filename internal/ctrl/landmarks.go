@@ -39,12 +39,12 @@ func GetNewLandmark(w http.ResponseWriter, r *http.Request) {
 
 // PostNewLandmark ...
 func PostNewLandmark(w http.ResponseWriter, r *http.Request) {
-	lm, err := val.ValidateNewLandmark(database, r)
+	landmark, err := val.ValidateNewLandmark(database, r)
 	if err != nil {
 		fmt.Println(err)
 		http.Redirect(w, r, "/landmarks/new", http.StatusSeeOther)
 	} else {
-		path := fmt.Sprintf("/landmarks/%d", lm.ID)
+		path := fmt.Sprintf("/landmarks/%d", landmark.ID)
 		http.Redirect(w, r, path, http.StatusSeeOther)
 	}
 }
@@ -52,17 +52,47 @@ func PostNewLandmark(w http.ResponseWriter, r *http.Request) {
 // GetShowLandmark ...
 func GetShowLandmark(w http.ResponseWriter, r *http.Request) {
 	if session.GetBool(r.Context(), "user_signed_in") {
-		lm, err := val.ValidateShowLandmark(database, r.URL.String())
+		landmark, err := val.ValidateShowLandmark(database, r.URL.String())
 		if err != nil {
 			fmt.Println(err)
 			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 		}
 		appMap := make(map[string]interface{})
-		appMap["Landmark"] = lm
+		appMap["Landmark"] = landmark
 		if err := render.WriteView(w, "landmarks_show", appMap); err != nil {
 			fmt.Println(err)
 		}
 	} else {
 		http.Redirect(w, r, "/sign_in", http.StatusSeeOther)
+	}
+}
+
+// GetEditLandmark ...
+func GetEditLandmark(w http.ResponseWriter, r *http.Request) {
+	if session.GetBool(r.Context(), "user_signed_in") {
+		landmark, err := val.ValidateShowLandmark(database, r.URL.String())
+		if err != nil {
+			fmt.Println(err)
+		}
+		appMap := make(map[string]interface{})
+		appMap["CSRFToken"] = nosurf.Token(r)
+		appMap["Landmark"] = landmark
+		if err := render.WriteView(w, "landmarks_edit", appMap); err != nil {
+			fmt.Println(err)
+		}
+	} else {
+		http.Redirect(w, r, "/sign_in", http.StatusSeeOther)
+	}
+}
+
+// PostEditLandmark ...
+func PostEditLandmark(w http.ResponseWriter, r *http.Request) {
+	err := val.ValidateEditLandmark(database, r)
+	if err != nil {
+		fmt.Println(err)
+		http.Redirect(w, r, r.URL.String(), http.StatusSeeOther)
+	} else {
+		path := fmt.Sprintf("/landmarks/%s", r.PostFormValue("landmark_id"))
+		http.Redirect(w, r, path, http.StatusSeeOther)
 	}
 }
