@@ -2,6 +2,8 @@
 {{define "main"}}
 <main>
   <h1>HITO Manager</h1>
-  <h2>Dashboard</h2>
+  {{with .Landmark}}
+  <h2>{{.Name}}</h2>
+  {{end}}
 </main>
 {{end}}

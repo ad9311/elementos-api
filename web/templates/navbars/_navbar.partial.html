@@ -1,7 +1,15 @@
 {{define "navbar"}}
 {{if .CurrentUser}}
 {{with .CurrentUser}}
-<p>{{.FirstName}}</p>
+<div>
+  <span>{{.FirstName}} {{.LastName}}</span>
+  <a href="/dashboard">Dashboard</a>
+  <a href="/landmarks/new">New Landmark</a>  
 {{end}}
+  <form id="sign_out" action="/sign_out" method="post">
+    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+    <input type="submit" name="submit" value="Sign Out"/>
+  </form>
+</div>
 {{end}}
 {{end}}

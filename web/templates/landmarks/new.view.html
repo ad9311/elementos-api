@@ -1,0 +1,21 @@
+{{template "index" .}}
+{{define "main"}}
+<main>
+  <h1>HITO Manager</h1>
+  <h2>New Landmark</h2>
+  <form id="new_landmark" action="/landmarks" method="post">
+    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+    {{with .CurrentUser}}
+    <input type="hidden" name="user_id" value="{{.ID}}">
+    {{end}}
+    <input type="text" name="name">
+    <input type="text" name="native_name">
+    <input type="text" name="category">
+    <textarea name="description"></textarea>
+    <input type="text" name="wiki_url">
+    <input type="text" name="location">
+    <input type="text" name="img_urls">
+    <input type="submit" name="submit" value="Create"/>
+  </form>
+</main>
+{{end}}

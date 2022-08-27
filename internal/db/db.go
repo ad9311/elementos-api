@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"strings"
 	"time"
 
 	// Drivers for PostgreSQL
@@ -39,4 +40,14 @@ func New(dsn string) (*Database, error) {
 	database.Conn.SetConnMaxLifetime(maxLifeTime)
 
 	return &database, nil
+}
+
+func pgArrayToSlice(pgArr string) []string {
+	chars := []string{"{", "}"}
+	for _, v := range chars {
+		pgArr = strings.ReplaceAll(pgArr, v, "")
+	}
+	slice := strings.Split(pgArr, ",")
+
+	return slice
 }
