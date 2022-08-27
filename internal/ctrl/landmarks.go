@@ -39,7 +39,8 @@ func GetNewLandmark(w http.ResponseWriter, r *http.Request) {
 
 // PostNewLandmark ...
 func PostNewLandmark(w http.ResponseWriter, r *http.Request) {
-	landmark, err := val.ValidateNewLandmark(database, r)
+	user := currentUser(r)
+	landmark, err := val.ValidateNewLandmark(database, r, user.ID)
 	if err != nil {
 		fmt.Println(err)
 		http.Redirect(w, r, "/landmarks/new", http.StatusSeeOther)
@@ -58,6 +59,7 @@ func GetShowLandmark(w http.ResponseWriter, r *http.Request) {
 			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 		}
 		appMap := make(map[string]interface{})
+		appMap["CSRFToken"] = nosurf.Token(r)
 		appMap["Landmark"] = landmark
 		if err := render.WriteView(w, "landmarks_show", appMap); err != nil {
 			fmt.Println(err)
@@ -95,4 +97,13 @@ func PostEditLandmark(w http.ResponseWriter, r *http.Request) {
 		path := fmt.Sprintf("/landmarks/%s", r.PostFormValue("landmark_id"))
 		http.Redirect(w, r, path, http.StatusSeeOther)
 	}
+}
+
+// PostDeleteLandmark ...
+func PostDeleteLandmark(w http.ResponseWriter, r *http.Request) {
+	err := val.ValidateDeleteLandmark(database, r)
+	if err != nil {
+		fmt.Println(err)
+	}
+	http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 }
