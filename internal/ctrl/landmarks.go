@@ -65,6 +65,7 @@ func GetShowLandmark(w http.ResponseWriter, r *http.Request) {
 		}
 		appMap := make(map[string]interface{})
 		appMap["CSRFToken"] = nosurf.Token(r)
+		appMap["CurrentUser"] = currentUser(r)
 		appMap["Landmark"] = landmark
 		if err := render.WriteView(w, "landmarks_show", appMap); err != nil {
 			fmt.Println(err)
@@ -83,6 +84,7 @@ func GetEditLandmark(w http.ResponseWriter, r *http.Request) {
 		}
 		appMap := make(map[string]interface{})
 		appMap["CSRFToken"] = nosurf.Token(r)
+		appMap["CurrentUser"] = currentUser(r)
 		appMap["Landmark"] = landmark
 		if err := render.WriteView(w, "landmarks_edit", appMap); err != nil {
 			fmt.Println(err)
