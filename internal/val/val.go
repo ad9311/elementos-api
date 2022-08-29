@@ -71,7 +71,7 @@ func checkPasswordConfirmation(password string, passwordConfirmation string) err
 	return nil
 }
 
-func checkPassword(password string, hashedPassword string) error {
+func checkFormPassword(password string, hashedPassword string) error {
 	err := bcrypt.CompareHashAndPassword(
 		[]byte(hashedPassword),
 		[]byte(password),
@@ -98,7 +98,7 @@ func checkUserID(formUserID string, userID int64) error {
 	}
 
 	if userID != int64(id) {
-		return fmt.Errorf("user not allowed")
+		return fmt.Errorf("ids do not match")
 	}
 
 	return nil

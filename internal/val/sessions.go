@@ -18,7 +18,7 @@ func ValidateUserSignIn(dtbs *db.Database, r *http.Request) (db.User, error) {
 		return db.User{}, err
 	}
 
-	err = checkPassword(r.PostFormValue("password"), user.HashedPassword)
+	err = checkFormPassword(r.PostFormValue("password"), user.HashedPassword)
 	user.HashedPassword = ""
 	if err != nil {
 		return db.User{}, err
