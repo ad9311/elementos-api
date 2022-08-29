@@ -1,0 +1,12 @@
+{
+  "name": "hitomgr",
+  "description": "HITO Manager is an API and database manager for HITO the Landmarks API.",
+  "main": "./web/static/js/index.js",
+  "repository": "git@github.com:ad9311/hitomgr.git",
+  "author": "Ángel Díaz <diazangel9311@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "tailwindcss": "^3.1.8"
+  }
+}
