@@ -1,7 +1,7 @@
 {{template "index" .}}
 {{define "main"}}
 <main>
-  <div class="w-4/5 mx-auto">
+  <div class="w-4/5 mx-auto mb-20">
     <div class="mt-6 mx-auto max-w-sm p-3 rounded-md border border-stone-200">
       <div class="w-4/5 mx-auto">
         <div class="mb-6">
@@ -15,31 +15,31 @@
             {{end}}
             <label for="name" class="block">
               <span class="block italic text-stone-400">Name</span>
-              <input id="name" type="text" name="name" class="p-2 rounded-md" placeholder="Name"/>
+              <input id="name" type="text" name="name" class="p-2 rounded-md" placeholder="Name" required/>
             </label>
             <label for="native_name" class="block">
               <span class="block italic text-stone-400">Native name</span>
-              <input id="native_name" type="text" name="native_name" class="p-2 rounded-md" placeholder="Native name"/>
+              <input id="native_name" type="text" name="native_name" class="p-2 rounded-md" placeholder="Native name" required/>
             </label>
             <label for="category" class="block">
               <span class="block italic text-stone-400">Category</span>
-              <input id="category" type="text" name="category" class="p-2 rounded-md" placeholder="Category"/>
+              <input id="category" type="text" name="category" class="p-2 rounded-md" placeholder="Category" required/>
             </label>
             <label for="description" class="block">
               <span class="block italic text-stone-400">Description</span>
-              <textarea id="description" name="description" class="p-2 rounded-md resize-none" rows="5" placeholder="Description"></textarea>
+              <textarea id="description" name="description" class="p-2 rounded-md resize-none" rows="5" placeholder="Description" required></textarea>
             </label>
             <label for="wiki_url" class="block">
               <span class="block italic text-stone-400">Wiki URL</span>
-              <input type="text" name="wiki_url" class="p-2 rounded-md" placeholder="Wikipedia URL"/>
+              <input id="wiki_url" type="text" name="wiki_url" class="p-2 rounded-md" placeholder="Wikipedia URL" required/>
             </label>
             <label for="location" class="block"/>
               <span class="block italic text-stone-400">Location</span>
-              <input type="text" name="location" class="p-2 rounded-md" placeholder="Location"/>
+              <input id="location" type="text" name="location" class="p-2 rounded-md" placeholder="Location" required/>
             </label>
             <label for="img_urls" class="block"/>
               <span class="block italic text-stone-400">Image URLs</span>
-              <input type="text" name="img_urls" class="p-2 rounded-md" placeholder="Image URLs"/>
+              <textarea name="img_urls" id="img_urls" rows="10" placeholder="Image URLs" class="p-2 rounded-md resize-none" required></textarea>
             </label>
             <div class="pt-6">
               <input type="submit" name="submit" value="Create" class="py-1 px-2 rounded-md bg-sky-500 text-white"/>
