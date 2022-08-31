@@ -2,15 +2,51 @@
 {{define "main"}}
 {{$CSRFToken := .CSRFToken}}
 <main>
-  <h1>HITO Manager</h1>
   {{with .Landmark}}
-  <h2>{{.Name}}</h2>
-  <a href="/landmarks/{{.ID}}/edit">Edit</a>
-  <form action="/landmarks/{{.ID}}/delete" method="post">
-    <input type="hidden" id="csrf_token" name="csrf_token" value="{{$CSRFToken}}"/>
-    <input type="hidden" name="landmark_id" value="{{.ID}}">
-    <input type="submit" name="submit" value="Delete">
-  </form>
+  <div class="w-4/5 mx-auto">
+    <div class="mt-6 mx-auto max-w-sm p-3 rounded-md border border-stone-200">
+      <div class="mb-6">
+        <div class="flex items-start">
+          <h2 class="text-2xl">{{.Name}}</h2>
+          <span class="text-xs text-stone-400">{{.ID}}</span>
+        </div>
+        <div>
+          <h3 class="text-xl text-neutral-500">{{.NativeName}}</h3>
+        </div>
+        <div class="mt-4">
+          <p>{{.Description}}</p>
+          <a href="{{.WikiURL}}">Wikipedia</a>
+        </div>
+        <div class="my-4">
+          <p>{{sliceToStr .Location}}</p>
+        </div>
+        <div id="landmark_{{.ID}}_imgs_">
+          {{range $i, $v := .ImgURLs}}
+          <div class="pt-2">
+            <img src="{{$v}}" alt="{{$i}}_landmark">
+          </div>
+          {{end}}
+        </div>
+        <div class="mt-4">
+          <p><b>Created at: </b>{{formatDate .CreatedAt}}</p>
+          <p><b>Updated at: </b>{{formatDate .UpdatedAt}}</p>
+          <p><b>Created by: </b>{{.CreatedBy}}</p>
+        </div>
+      </div>
+      <div class="flex items-center">
+        <div class="mr-2">
+          <a href="/landmarks/{{.ID}}/edit">
+            <button type="button" class="py-1 px-2 rounded-md bg-sky-500 text-white">Edit</button>
+          </a>
+        </div>
+        <form action="/landmarks/{{.ID}}/delete" method="post">
+          <input type="hidden" id="csrf_token" name="csrf_token" value="{{$CSRFToken}}"/>
+          <input type="hidden" name="landmark_id" value="{{.ID}}">
+          <input type="submit" name="submit" value="Delete" class="py-1 px-2 rounded-md bg-sky-500 text-white">
+        </form>
+      </div>
+    </div>
+  </div>
   {{end}}
 </main>
 {{end}}

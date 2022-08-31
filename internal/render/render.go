@@ -117,5 +117,15 @@ func templateFuncMap() template.FuncMap {
 		"formatDate": func(date time.Time) string {
 			return date.Format("02 Jan 2006")
 		},
+		"sliceToStr": func(strSlice []string) string {
+			str := ""
+			for i, v := range strSlice {
+				str += v
+				if i < (len(strSlice) - 1) {
+					str += ", "
+				}
+			}
+			return str
+		},
 	}
 }
