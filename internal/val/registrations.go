@@ -1,9 +1,11 @@
 package val
 
 import (
+	"errors"
 	"net/http"
 
 	"github.com/ad9311/hitomgr/internal/db"
+	"github.com/ad9311/hitomgr/internal/errs"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -24,10 +26,10 @@ func ValidateUserSignUp(dtbs *db.Database, r *http.Request) error {
 
 	inviation, err := dtbs.SelectInvitation(formMap["invitation_code"])
 	if err != nil {
-		return err
+		return errors.New(errs.InvNotExists)
 	}
 
-	if err = checkDateAfter(inviation.ExpiresAt); err != nil {
+	if err = checkDateAfter(inviation.ExpiresAt, "invitation"); err != nil {
 		return err
 	}
 
@@ -43,12 +45,12 @@ func ValidateUserSignUp(dtbs *db.Database, r *http.Request) error {
 		bcrypt.DefaultCost,
 	)
 	if err != nil {
-		return err
+		return errors.New(errs.InternalErr)
 	}
 	formMap["hashed_password"] = string(hashedPassword)
 
 	if err = dtbs.InsertUser(formMap); err != nil {
-		return err
+		return errors.New(errs.UserNotInserted)
 	}
 
 	return nil

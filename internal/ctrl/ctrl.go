@@ -27,3 +27,11 @@ func currentUser(r *http.Request) db.User {
 
 	return db.User{}
 }
+
+func alert(r *http.Request) string {
+	return session.PopString(r.Context(), "alert")
+}
+
+func notice(r *http.Request) string {
+	return session.PopString(r.Context(), "notice")
+}

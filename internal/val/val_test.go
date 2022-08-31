@@ -80,7 +80,7 @@ func TestCheckDateAfter(t *testing.T) {
 	}
 
 	for _, v := range goodInputs {
-		err := checkDateAfter(v)
+		err := checkDateAfter(v, "")
 		if err != nil {
 			t.Errorf("FAILED expected: no error, got: error")
 		} else {
@@ -89,7 +89,7 @@ func TestCheckDateAfter(t *testing.T) {
 	}
 
 	for _, v := range badInputs {
-		err := checkDateAfter(v)
+		err := checkDateAfter(v, "")
 		if err != nil {
 			t.Logf("PASSED expected: error, got: error")
 		} else {
