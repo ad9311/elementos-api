@@ -654,6 +654,10 @@ video {
   cursor: pointer;
 }
 
+.resize-none {
+  resize: none;
+}
+
 .items-start {
   align-items: flex-start;
 }
