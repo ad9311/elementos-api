@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"path/filepath"
 	"strings"
+	"time"
 )
 
 const (
@@ -112,5 +113,9 @@ func viewKey(path string) string {
 }
 
 func templateFuncMap() template.FuncMap {
-	return template.FuncMap{}
+	return template.FuncMap{
+		"formatDate": func(date time.Time) string {
+			return date.Format("02 Jan 2006")
+		},
+	}
 }
