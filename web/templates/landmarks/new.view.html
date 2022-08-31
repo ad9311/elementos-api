@@ -1,6 +1,5 @@
 {{template "index" .}}
 {{define "main"}}
-{{$UserID := .CurrentUser}}
 <main>
   <div class="w-4/5 mx-auto">
     <div class="mt-6 mx-auto max-w-sm p-3 rounded-md border border-stone-200">
@@ -11,7 +10,9 @@
         <div>
           <form id="new_landmark" action="/landmarks" method="post">
             <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
-            <input type="hidden" name="user_id" value="{{.UserID}}">
+            {{with .CurrentUser}}
+            <input type="hidden" name="user_id" value="{{.ID}}">
+            {{end}}
             <label for="name" class="block">
               <span class="block italic text-stone-400">Name</span>
               <input id="name" type="text" name="name" class="p-2 rounded-md" placeholder="Name"/>
