@@ -50,7 +50,7 @@ func formToMap(r *http.Request, params []string) map[string]string {
 func checkFormParams(r *http.Request, params []string) error {
 	err := r.ParseForm()
 	if err != nil {
-		return err
+		return errors.New(errs.InternalErr)
 	}
 
 	for _, k := range params {
