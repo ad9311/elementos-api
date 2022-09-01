@@ -170,14 +170,14 @@ func (d *Database) UpdateLandmarkByID(formMap map[string]string) error {
 		ctx,
 		query,
 		formMap["name"],
-		formMap["native-name"],
+		formMap["native_name"],
 		formMap["category"],
 		formMap["description"],
-		formMap["wiki-url"],
+		formMap["wiki_url"],
 		formMap["location"],
-		formMap["img-urls"],
+		formMap["img_urls"],
 		time.Now(),
-		formMap["landmark-id"],
+		formMap["landmark_id"],
 	)
 	if err != nil {
 		return err

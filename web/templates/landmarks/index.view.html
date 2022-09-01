@@ -1,11 +1,29 @@
 {{template "index" .}}
 {{define "main"}}
 <main>
-  <h1>HITO Manager</h1>
-  <h2>Dashboard</h2>
-  {{range .Landmarks}}
-  <a href="/landmarks/{{.ID}}">{{.Name}}</a>
-  <br/>
-  {{end}}
+  <div class="w-4/5 mx-auto">
+    <div class="mt-6 mx-auto max-w-2xl p-3">
+      <div class="mb-6">
+        <h2 class="text-2xl">Dashboard</h2>
+      </div>
+      {{range .Landmarks}}
+      <div class="mb-6 p-2 rounded-md border border-stone-200">
+        <div class="pb-2 flex items-start">
+          <a href="/landmarks/{{.ID}}">
+            <h3 class="text-xl font-bold text-neutral-500 hover:text-sky-900">{{.Name}}</h3>
+          </a>
+          <span class="ml-1 text-neutral-400 text-xs">
+            {{.ID}}
+          </span>
+        </div>
+        <div>
+          <p><b>Created at: </b>{{formatDate .CreatedAt}}</p>
+          <p><b>Updated at: </b>{{formatDate .UpdatedAt}}</p>
+          <p><b>Created by: </b>{{.CreatedBy}}</p>
+        </div>
+      </div>
+      {{end}}
+    </div>
+  </div>
 </main>
 {{end}}

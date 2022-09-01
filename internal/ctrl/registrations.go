@@ -16,6 +16,8 @@ func GetSignUp(w http.ResponseWriter, r *http.Request) {
 	} else {
 		appMap := make(map[string]interface{})
 		appMap["CSRFToken"] = nosurf.Token(r)
+		appMap["Alert"] = alert(r)
+		appMap["Notice"] = notice(r)
 		if err := render.WriteView(w, "registrations_new", appMap); err != nil {
 			fmt.Println(err)
 		}
@@ -27,8 +29,11 @@ func PostSignUp(w http.ResponseWriter, r *http.Request) {
 	err := val.ValidateUserSignUp(database, r)
 	if err != nil {
 		fmt.Println(err)
+		session.Put(r.Context(), "alert", err.Error())
 		http.Redirect(w, r, "/sign_up", http.StatusSeeOther)
 	} else {
+		notif := fmt.Sprintf("user %s created successfully", r.PostFormValue("username"))
+		session.Put(r.Context(), "notice", notif)
 		http.Redirect(w, r, "/sign_in", http.StatusSeeOther)
 	}
 }

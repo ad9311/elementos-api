@@ -1,21 +1,53 @@
 {{template "index" .}}
 {{define "main"}}
 <main>
-  <h1>HITO Manager</h1>
-  <h2>New Landmark</h2>
-  <form id="new_landmark" action="/landmarks" method="post">
-    <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
-    {{with .CurrentUser}}
-    <input type="hidden" name="user_id" value="{{.ID}}">
-    {{end}}
-    <input type="text" name="name">
-    <input type="text" name="native_name">
-    <input type="text" name="category">
-    <textarea name="description"></textarea>
-    <input type="text" name="wiki_url">
-    <input type="text" name="location">
-    <input type="text" name="img_urls">
-    <input type="submit" name="submit" value="Create"/>
-  </form>
+  <div class="w-4/5 mx-auto mb-20">
+    <div class="mt-6 mx-auto max-w-sm p-3 rounded-md border border-stone-200">
+      <div class="w-4/5 mx-auto">
+        <div class="mb-6">
+          <h2 class="text-2xl">New landmark</h2>
+        </div>
+        <div>
+          <form id="new_landmark" action="/landmarks" method="post">
+            <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+            {{with .CurrentUser}}
+            <input type="hidden" name="user_id" value="{{.ID}}">
+            {{end}}
+            <label for="name" class="block">
+              <span class="block italic text-stone-400">Name</span>
+              <input id="name" type="text" name="name" class="p-2 rounded-md" placeholder="Name" required/>
+            </label>
+            <label for="native_name" class="block">
+              <span class="block italic text-stone-400">Native name</span>
+              <input id="native_name" type="text" name="native_name" class="p-2 rounded-md" placeholder="Native name" required/>
+            </label>
+            <label for="category" class="block">
+              <span class="block italic text-stone-400">Category</span>
+              <input id="category" type="text" name="category" class="p-2 rounded-md" placeholder="Category" required/>
+            </label>
+            <label for="description" class="block">
+              <span class="block italic text-stone-400">Description</span>
+              <textarea id="description" name="description" class="p-2 rounded-md resize-none" rows="5" placeholder="Description" required></textarea>
+            </label>
+            <label for="wiki_url" class="block">
+              <span class="block italic text-stone-400">Wiki URL</span>
+              <input id="wiki_url" type="text" name="wiki_url" class="p-2 rounded-md" placeholder="Wikipedia URL" required/>
+            </label>
+            <label for="location" class="block"/>
+              <span class="block italic text-stone-400">Location</span>
+              <input id="location" type="text" name="location" class="p-2 rounded-md" placeholder="Location" required/>
+            </label>
+            <label for="img_urls" class="block"/>
+              <span class="block italic text-stone-400">Image URLs</span>
+              <textarea name="img_urls" id="img_urls" rows="10" placeholder="Image URLs" class="p-2 rounded-md resize-none" required></textarea>
+            </label>
+            <div class="pt-6">
+              <input type="submit" name="submit" value="Create" class="py-1 px-2 rounded-md bg-sky-500 text-white"/>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
 </main>
 {{end}}

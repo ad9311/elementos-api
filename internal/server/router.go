@@ -10,7 +10,6 @@ import (
 func routes() http.Handler {
 	mux := chi.NewRouter()
 
-	// mux.Use(middleware.Recoverer)
 	mux.Use(loadSession)
 	mux.Use(newCSRF)
 
