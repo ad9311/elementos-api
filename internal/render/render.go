@@ -127,5 +127,16 @@ func templateFuncMap() template.FuncMap {
 			}
 			return str
 		},
+		"firstCharToUpper": func(str string) string {
+			newStr := ""
+			for i, c := range str {
+				if i == 0 {
+					newStr += strings.ToUpper(string(c))
+				} else {
+					newStr += string(c)
+				}
+			}
+			return newStr
+		},
 	}
 }

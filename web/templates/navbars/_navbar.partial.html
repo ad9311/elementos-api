@@ -35,15 +35,15 @@
   </div>
   {{end}}
   {{end}}
-  <div class="mt-2 w-4/5 mx-auto">
+  <div class="mt-2 w-4/5 lg:w-1/5 mx-auto">
     {{if .Notice }}
     <div id="notice" class="px-2 py-1 rounded bg-green-500 opacity-90 text-white">
-      <span>{{.Notice}}</span>
+      <span>{{firstCharToUpper .Notice}}</span>
     </div>
     {{end}}
     {{if .Alert }}
     <div id="alert" class="px-2 py-1 rounded bg-red-500 opacity-90 text-white">
-      <span>{{.Alert}}</span>
+      <span>{{firstCharToUpper .Alert}}</span>
     </div>
     {{end}}
   </div>
