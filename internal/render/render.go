@@ -56,7 +56,7 @@ func WriteView(w http.ResponseWriter, key string, data interface{}) error {
 }
 
 func deafultViewsCache() (map[string]*template.Template, error) {
-	if cache {
+	if false {
 		return viewsCache, nil
 	}
 
