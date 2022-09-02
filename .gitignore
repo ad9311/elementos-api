@@ -6,3 +6,5 @@ seed.sql
 /node_modules/
 # Go files
 quick.go
+# Binaries
+/bin/hitomgr
