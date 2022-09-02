@@ -23,7 +23,7 @@ var cache bool
 func SetUp(serverCache bool) error {
 	cache = serverCache
 
-	vc, err := deafultViewsCache()
+	vc, err := loadViewsCache()
 	if err != nil {
 		return err
 	}
@@ -56,7 +56,7 @@ func WriteView(w http.ResponseWriter, key string, data interface{}) error {
 }
 
 func deafultViewsCache() (map[string]*template.Template, error) {
-	if false {
+	if cache {
 		return viewsCache, nil
 	}
 
