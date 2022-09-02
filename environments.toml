@@ -1,0 +1,15 @@
+[development]
+database_url = "postgres://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@localhost:5432/hitomgr_development?sslmode=disable"
+server_port = "3000"
+server_secure = false
+server_cache = false
+[production]
+database_url = "${DATABASE_URL}"
+server_port = "${PORT}"
+server_secure = true
+server_cache = true
+[test]
+database_url = "postgres://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@localhost:5432/hitomgr_test?sslmode=disable"
+server_port = "3010"
+server_secure = false
+server_cache = false

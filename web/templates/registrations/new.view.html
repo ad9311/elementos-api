@@ -1,0 +1,45 @@
+{{template "index" .}}
+{{define "main"}}
+<main>
+  <div class="w-4/5 mx-auto">
+    <div class="mt-6 mx-auto max-w-sm p-3 rounded-md border border-stone-200">
+      <div class="w-4/5 mx-auto">
+        <h2 class="mb-6 text-xl font-bold">Sign Up</h2>
+        <form id="sign_up" action="/sign_up" method="post">
+          <input type="hidden" name="csrf_token" value="{{.CSRFToken}}">
+          <label for="first_name" class="block mb-3">
+            <span class="block italic text-stone-400">First name</span>
+            <input id="first_name" type="text" name="first_name" placeholder="First name" class="p-2 rounded-md"/>
+          </label>
+          <label for="last_name" class="block mb-3">
+            <span class="block italic text-stone-400">Last name</span>
+            <input id="last_name" type="text" name="last_name" placeholder="Last name" class="p-2 rounded-md"/>
+          </label>
+          <label for="username" class="block mb-3">
+            <span class="block italic text-stone-400">Username</span>
+            <input id="username" type="text" name="username" placeholder="Username" class="p-2 rounded-md"/>
+          </label>
+          <label for="password" class="block mb-3">
+            <span class="block italic text-stone-400">Password</span>
+            <input id="password" type="password" name="password" placeholder="Password" class="p-2 rounded-md"/>
+          </label>
+          <label for="password_confirmation" class="block mb-3">
+            <span class="block italic text-stone-400">Password confirmation</span>
+            <input id="password_confirmation" type="password" name="password_confirmation" placeholder="Password confirmation" class="p-2 rounded-md"/>
+          </label>
+          <label for="invitation_code" class="block mb-3">
+            <span class="block italic text-stone-400">Inviation code</span>
+            <input id="invitation_code" type="text" name="invitation_code" placeholder="Inviation code" class="p-2 rounded-md"/>
+          </label>
+          <div class="pt-6 flex items-center">
+            <input type="submit" name="submit" value="Sign Up" class="mr-2 py-1 px-2 rounded-md bg-sky-500 text-white cursor-pointer"/>
+            <a href="/sign_in">
+              <button type="button" class="py-1 px-2 rounded-md bg-sky-500 text-white">Sign In</button>
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+{{end}}
