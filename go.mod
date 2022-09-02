@@ -1,6 +1,6 @@
 module github.com/ad9311/hitomgr
 
-go 1.19
+go 1.18
 
 require (
 	github.com/alexedwards/scs/v2 v2.5.0

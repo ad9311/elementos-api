@@ -32,9 +32,11 @@ const (
 
 // LoadConfig ...
 func LoadConfig(env string) (Config, error) {
-	err := godotenv.Load(".env")
-	if err != nil {
-		return Config{}, err
+	if env != production {
+		err := godotenv.Load(".env")
+		if err != nil {
+			return Config{}, err
+		}
 	}
 
 	path, err := filepath.Abs(envFile)

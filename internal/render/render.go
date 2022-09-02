@@ -23,7 +23,7 @@ var cache bool
 func SetUp(serverCache bool) error {
 	cache = serverCache
 
-	vc, err := deafultViewsCache()
+	vc, err := loadViewsCache()
 	if err != nil {
 		return err
 	}
