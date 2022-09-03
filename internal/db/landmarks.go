@@ -46,7 +46,8 @@ func (d *Database) SelectLandmarks() ([]Landmark, error) {
 	location := ""
 	imgURLs := ""
 	query := `SELECT landmarks.*,users.username
-	FROM users INNER JOIN landmarks ON users.id=landmarks.user_id`
+	FROM users INNER JOIN landmarks ON users.id=landmarks.user_id ORDER BY landmarks.name;
+	`
 
 	rows, err := d.Conn.QueryContext(ctx, query)
 	if err != nil {
@@ -93,7 +94,8 @@ func (d *Database) SelectLandmarkByID(id int64) (Landmark, error) {
 	location := ""
 	imgURLs := ""
 	query := `SELECT landmarks.*,users.username
-	FROM landmarks RIGHT JOIN users ON users.id=landmarks.user_id WHERE landmarks.id=$1`
+	FROM landmarks RIGHT JOIN users ON users.id=landmarks.user_id WHERE landmarks.id=$1;
+	`
 
 	row := d.Conn.QueryRowContext(ctx, query, id)
 	err := row.Scan(
@@ -130,7 +132,8 @@ func (d *Database) SelectLandmarkByName(name string) (Landmark, error) {
 	location := ""
 	imgURLs := ""
 	query := `SELECT landmarks.*,users.username
-	FROM landmarks RIGHT JOIN users ON users.id=landmarks.user_id WHERE landmarks.name=$1`
+	FROM landmarks RIGHT JOIN users ON users.id=landmarks.user_id WHERE landmarks.name=$1;
+	`
 
 	row := d.Conn.QueryRowContext(ctx, query, name)
 	err := row.Scan(
@@ -158,13 +161,14 @@ func (d *Database) SelectLandmarkByName(name string) (Landmark, error) {
 	return landmark, nil
 }
 
-// UpdateLandmarkByID ...
-func (d *Database) UpdateLandmarkByID(formMap map[string]string) error {
+// UpdateLandmark ...
+func (d *Database) UpdateLandmark(formMap map[string]string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
 	query := `UPDATE landmarks SET name=$1,native_name=$2,category=$3,description=$4,wiki_url=$5,
-	location=$6,img_urls=$7,updated_at=$8 WHERE id=$9`
+	location=$6,img_urls=$7,updated_at=$8 WHERE id=$9;
+	`
 
 	_, err := d.Conn.ExecContext(
 		ctx,
@@ -186,12 +190,12 @@ func (d *Database) UpdateLandmarkByID(formMap map[string]string) error {
 	return nil
 }
 
-// DeleteLandmarkByID ...
-func (d *Database) DeleteLandmarkByID(id int64) error {
+// DeleteLandmark ...
+func (d *Database) DeleteLandmark(id int64) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	query := "DELETE FROM landmarks WHERE id=$1"
+	query := "DELETE FROM landmarks WHERE id=$1;"
 
 	_, err := d.Conn.ExecContext(ctx, query, id)
 	if err != nil {

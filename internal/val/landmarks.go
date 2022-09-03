@@ -1,12 +1,10 @@
 package val
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 
 	"github.com/ad9311/hitomgr/internal/db"
-	"github.com/ad9311/hitomgr/internal/errs"
 )
 
 // ValidateNewLandmark ...
@@ -36,12 +34,12 @@ func ValidateNewLandmark(dtbs *db.Database, r *http.Request, userID int64) (db.L
 
 	err = dtbs.InsertLandmark(formMap)
 	if err != nil {
-		return db.Landmark{}, errors.New(errs.LandmarkNotInserted)
+		return db.Landmark{}, err
 	}
 
 	landmark, err := dtbs.SelectLandmarkByName(formMap["name"])
 	if err != nil {
-		return db.Landmark{}, errors.New(errs.InternalErr)
+		return db.Landmark{}, err
 	}
 
 	return landmark, nil
@@ -51,12 +49,12 @@ func ValidateNewLandmark(dtbs *db.Database, r *http.Request, userID int64) (db.L
 func ValidateShowLandmark(dtbs *db.Database, urlStr string) (db.Landmark, error) {
 	i, err := retrieveIDFromURL(urlStr, "landmarks")
 	if err != nil {
-		return db.Landmark{}, errors.New(errs.InternalErr)
+		return db.Landmark{}, err
 	}
 
-	lm, err := dtbs.SelectLandmarkByID(int64(i))
+	lm, err := dtbs.SelectLandmarkByID(i)
 	if err != nil {
-		return db.Landmark{}, errors.New(errs.InternalErr)
+		return db.Landmark{}, err
 	}
 
 	return lm, nil
@@ -66,7 +64,7 @@ func ValidateShowLandmark(dtbs *db.Database, urlStr string) (db.Landmark, error)
 func ValidateEditLandmark(dtbs *db.Database, r *http.Request) error {
 	id, err := retrieveIDFromURL(r.URL.String(), "landmarks")
 	if err != nil {
-		return errors.New(errs.InternalErr)
+		return err
 	}
 
 	params := []string{
@@ -88,11 +86,15 @@ func ValidateEditLandmark(dtbs *db.Database, r *http.Request) error {
 	formMap["img_urls"] = "{" + formMap["img_urls"] + "}"
 
 	if formMap["landmark_id"] != fmt.Sprintf("%d", id) {
-		return errors.New(errs.FormErr)
+		return fmt.Errorf(
+			"ids %d and %s do not match",
+			id,
+			formMap["landmark_id"],
+		)
 	}
 
-	if err := dtbs.UpdateLandmarkByID(formMap); err != nil {
-		return errors.New(errs.LandmarkNotUpdated)
+	if err := dtbs.UpdateLandmark(formMap); err != nil {
+		return err
 	}
 
 	return nil
@@ -102,7 +104,7 @@ func ValidateEditLandmark(dtbs *db.Database, r *http.Request) error {
 func ValidateDeleteLandmark(dtbs *db.Database, r *http.Request) error {
 	id, err := retrieveIDFromURL(r.URL.String(), "landmarks")
 	if err != nil {
-		return errors.New(errs.InternalErr)
+		return err
 	}
 
 	params := []string{"landmark_id"}
@@ -111,12 +113,16 @@ func ValidateDeleteLandmark(dtbs *db.Database, r *http.Request) error {
 	}
 
 	if r.PostFormValue("landmark_id") != fmt.Sprintf("%d", id) {
-		return errors.New(errs.FormErr)
+		return fmt.Errorf(
+			"ids %d and %s do not match",
+			id,
+			r.PostFormValue("landmark_id"),
+		)
 	}
 
-	if err := dtbs.DeleteLandmarkByID(id); err != nil {
+	if err := dtbs.DeleteLandmark(id); err != nil {
 		return err
 	}
 
-	return errors.New(errs.LandmarkNotDeleted)
+	return err
 }

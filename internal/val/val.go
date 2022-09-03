@@ -1,7 +1,6 @@
 package val
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -9,7 +8,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/ad9311/hitomgr/internal/errs"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -50,17 +48,17 @@ func formToMap(r *http.Request, params []string) map[string]string {
 func checkFormParams(r *http.Request, params []string) error {
 	err := r.ParseForm()
 	if err != nil {
-		return errors.New(errs.InternalErr)
+		return err
 	}
 
 	for _, k := range params {
 		_, e := r.PostForm[k]
 		if !e {
-			return fmt.Errorf(errs.MissingFormField, k)
+			return fmt.Errorf("%s must exists", k)
 		}
 
 		if r.PostFormValue(k) == "" {
-			return fmt.Errorf(errs.EmptyFormField, k)
+			return fmt.Errorf("%s cannot be black", k)
 		}
 	}
 
@@ -69,7 +67,7 @@ func checkFormParams(r *http.Request, params []string) error {
 
 func checkPasswordConfirmation(password string, passwordConfirmation string) error {
 	if password != passwordConfirmation {
-		return errors.New(errs.PswdConfMismatch)
+		return fmt.Errorf("password confirmation does not match")
 	}
 	return nil
 }
@@ -88,7 +86,7 @@ func checkFormPassword(password string, hashedPassword string) error {
 
 func checkDateAfter(date time.Time, model string) error {
 	if time.Now().After(date) {
-		return fmt.Errorf(errs.ExpiredDate, model)
+		return fmt.Errorf("%s date has already passed", model)
 	}
 
 	return nil
@@ -101,7 +99,7 @@ func checkUserID(formUserID string, userID int64) error {
 	}
 
 	if userID != int64(id) {
-		return errors.New(errs.FormErr)
+		return fmt.Errorf("user id's do not match")
 	}
 
 	return nil

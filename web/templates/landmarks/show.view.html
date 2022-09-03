@@ -7,15 +7,20 @@
     <div class="mt-6 mx-auto max-w-sm p-3 rounded-md border border-stone-200">
       <div class="mb-6">
         <div class="flex items-start">
-          <h2 class="text-2xl">{{.Name}}</h2>
+          <h2 class="text-2xl font-bold">{{.Name}}</h2>
           <span class="text-xs text-stone-400">{{.ID}}</span>
         </div>
         <div>
           <h3 class="text-xl text-neutral-500">{{.NativeName}}</h3>
         </div>
-        <div class="mt-4">
+        <div class="mt-3">
+          <p class="font-bold">{{.Category}}</p>
+        </div>
+        <div class="mt-3">
           <p>{{.Description}}</p>
-          <a href="{{.WikiURL}}">Wikipedia</a>
+          <div class="mt-2">
+            <a class="text-sky-700 hover:text-sky-900" href="{{.WikiURL}}">Wikipedia URL</a>
+          </div>
         </div>
         <div class="my-4">
           <p>{{sliceToStr .Location}}</p>
@@ -39,10 +44,10 @@
             <button type="button" class="py-1 px-2 rounded-md bg-sky-500 text-white">Edit</button>
           </a>
         </div>
-        <form action="/landmarks/{{.ID}}/delete" method="post">
+        <form id="delete_landmark" action="/landmarks/{{.ID}}/delete" method="post">
           <input type="hidden" id="csrf_token" name="csrf_token" value="{{$CSRFToken}}"/>
           <input type="hidden" name="landmark_id" value="{{.ID}}">
-          <input type="submit" name="submit" value="Delete" class="py-1 px-2 rounded-md bg-sky-500 text-white">
+          <input type="submit" name="submit" value="Delete" class="py-1 px-2 rounded-md bg-red-500 text-white cursor-pointer">
         </form>
       </div>
     </div>

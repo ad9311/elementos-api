@@ -43,7 +43,7 @@ func New(dsn string) (*Database, error) {
 }
 
 func pgArrayToSlice(pgArr string) []string {
-	chars := []string{"{", "}"}
+	chars := []string{"{", "}", `"`}
 	for _, v := range chars {
 		pgArr = strings.ReplaceAll(pgArr, v, "")
 	}

@@ -23,7 +23,11 @@
             </label>
             <label for="category" class="block">
               <span class="block italic text-stone-400">Category</span>
-              <input id="category" type="text" name="category" class="p-2 rounded-md" placeholder="Category" required/>
+              <select id="category" name="category" class="p-2 rounded-md w-[240px] bg-white text-stone-600 appearance-none" required>
+                {{range .Categories}}
+                <option value="{{.Name}}">{{.Name}}</option>
+                {{end}}
+              </select>
             </label>
             <label for="description" class="block">
               <span class="block italic text-stone-400">Description</span>
