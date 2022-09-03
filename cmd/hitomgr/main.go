@@ -1,9 +1,9 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 
+	"github.com/ad9311/hitomgr/internal/apictrl"
 	"github.com/ad9311/hitomgr/internal/cfg"
 	"github.com/ad9311/hitomgr/internal/ctrl"
 	"github.com/ad9311/hitomgr/internal/db"
@@ -19,25 +19,12 @@ type command struct {
 
 const (
 	environment = "-e"
-	create      = "-c"
 )
 
 func main() {
 	cmd, err := parseArgs()
-
-	switch cmd.mode {
-	case create:
-		if err != nil {
-			fmt.Println(errors.New("database could not be created"))
-		} else {
-			fmt.Println("database created successfully")
-		}
-		break
-	default:
-		if err != nil {
-			fmt.Println(err)
-		}
-		break
+	if err != nil {
+		fmt.Println(err)
 	}
 
 	if cmd.boot {
@@ -59,6 +46,7 @@ func main() {
 
 		session := server.SetUp(config.ServerPort, config.SeverSecure)
 		ctrl.SetUp(database, session)
+		apictrl.Setup(database)
 
 		fmt.Println(server.New().ListenAndServe())
 	}

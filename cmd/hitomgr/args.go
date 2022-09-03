@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"os"
-	"os/exec"
 )
 
 func parseArgs() (command, error) {
@@ -23,18 +22,7 @@ func parseArgs() (command, error) {
 			cmd.mode = environment
 
 			return cmd, nil
-		case create:
-			if len(args) >= 2 {
-				return cmd, errors.New("too many arguments")
-			}
-			cmd.boot = false
-			cmd.mode = create
-			_, err := exec.Command("./bin/dbmate", "create").Output()
-			if err != nil {
-				return cmd, err
-			}
 
-			return cmd, nil
 		default:
 			return cmd, errors.New("undefined flag")
 		}
