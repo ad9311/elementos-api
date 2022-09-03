@@ -52,7 +52,7 @@ func ValidateShowLandmark(dtbs *db.Database, urlStr string) (db.Landmark, error)
 		return db.Landmark{}, err
 	}
 
-	lm, err := dtbs.SelectLandmarkByID(int64(i))
+	lm, err := dtbs.SelectLandmarkByID(i)
 	if err != nil {
 		return db.Landmark{}, err
 	}
@@ -86,10 +86,14 @@ func ValidateEditLandmark(dtbs *db.Database, r *http.Request) error {
 	formMap["img_urls"] = "{" + formMap["img_urls"] + "}"
 
 	if formMap["landmark_id"] != fmt.Sprintf("%d", id) {
-		return err
+		return fmt.Errorf(
+			"ids %d and %s do not match",
+			id,
+			formMap["landmark_id"],
+		)
 	}
 
-	if err := dtbs.UpdateLandmarkByID(formMap); err != nil {
+	if err := dtbs.UpdateLandmark(formMap); err != nil {
 		return err
 	}
 
@@ -109,10 +113,14 @@ func ValidateDeleteLandmark(dtbs *db.Database, r *http.Request) error {
 	}
 
 	if r.PostFormValue("landmark_id") != fmt.Sprintf("%d", id) {
-		return err
+		return fmt.Errorf(
+			"ids %d and %s do not match",
+			id,
+			r.PostFormValue("landmark_id"),
+		)
 	}
 
-	if err := dtbs.DeleteLandmarkByID(id); err != nil {
+	if err := dtbs.DeleteLandmark(id); err != nil {
 		return err
 	}
 

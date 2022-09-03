@@ -27,7 +27,7 @@ func managerRoutes(r chi.Router) {
 		r.Post("/", ctrl.PostSignUp)
 	})
 
-	// // Landmarks
+	// Landmarks
 	r.Get("/dashboard", ctrl.GetDashboard)
 	r.Route("/landmarks", func(r chi.Router) {
 		r.Post("/", ctrl.PostNewLandmark)
@@ -37,6 +37,17 @@ func managerRoutes(r chi.Router) {
 			r.Get("/edit", ctrl.GetEditLandmark)
 			r.Post("/", ctrl.PostEditLandmark)
 			r.Post("/delete", ctrl.PostDeleteLandmark)
+		})
+	})
+
+	// Categories
+	r.Route("/categories", func(r chi.Router) {
+		r.Get("/", ctrl.GetCategories)
+		r.Post("/", ctrl.PostCategory)
+		r.Get("/new", ctrl.GetNewCategory)
+		r.Route("/{categoryID:[\\d]+}", func(r chi.Router) {
+			r.Get("/edit", ctrl.GetEditCategory)
+			r.Post("/", ctrl.PostEditCategory)
 		})
 	})
 

@@ -52,3 +52,11 @@ type ResponseWithData struct {
 type Response struct {
 	Message string `json:"message"`
 }
+
+// Category ...
+type Category struct {
+	ID        int64
+	Name      string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}

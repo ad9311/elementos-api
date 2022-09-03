@@ -4,6 +4,7 @@ seed.sql
 # Directories
 /vendor/
 /node_modules/
+/.vscode/
 # Go files
 quick.go
 # Binaries
