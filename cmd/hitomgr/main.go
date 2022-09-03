@@ -1,10 +1,9 @@
 package main
 
 import (
-	"errors"
-	"fmt"
-
+	"github.com/ad9311/hitomgr/internal/apictrl"
 	"github.com/ad9311/hitomgr/internal/cfg"
+	"github.com/ad9311/hitomgr/internal/cnsl"
 	"github.com/ad9311/hitomgr/internal/ctrl"
 	"github.com/ad9311/hitomgr/internal/db"
 	"github.com/ad9311/hitomgr/internal/render"
@@ -13,53 +12,51 @@ import (
 
 type command struct {
 	environment string
+	load        bool
 	boot        bool
 	mode        string
 }
 
 const (
 	environment = "-e"
-	create      = "-c"
 )
 
 func main() {
 	cmd, err := parseArgs()
-
-	switch cmd.mode {
-	case create:
-		if err != nil {
-			fmt.Println(errors.New("database could not be created"))
-		} else {
-			fmt.Println("database created successfully")
-		}
-		break
-	default:
-		if err != nil {
-			fmt.Println(err)
-		}
-		break
+	if err != nil {
+		cnsl.Error(err)
 	}
 
-	if cmd.boot {
-		fmt.Println("HITO SERVER")
+	if cmd.load {
+		cnsl.InitMessage()
+		cmd.boot = true
 
 		config, err := cfg.LoadConfig(cmd.environment)
 		if err != nil {
-			fmt.Println(err)
+			cmd.boot = false
+			cnsl.Error(err)
 		}
 
 		database, err := db.New(config.DatabaseURL)
 		if err != nil {
-			fmt.Println(err)
+			cmd.boot = false
+			cnsl.Error(err)
 		}
 
 		if err := render.SetUp(config.ServerCache); err != nil {
-			fmt.Println(err)
+			cmd.boot = false
+			cnsl.Error(err)
 		}
 
-		session := server.SetUp(config.ServerPort, config.SeverSecure)
-		ctrl.SetUp(database, session)
+		if cmd.boot {
+			setupCloseHandler()
 
-		fmt.Println(server.New().ListenAndServe())
+			session := server.SetUp(config.ServerPort, config.SeverSecure)
+			ctrl.SetUp(database, session)
+			apictrl.Setup(database)
+
+			cnsl.ServerInfo(cmd.environment, config.ServerPort)
+			cnsl.Error(server.New().ListenAndServe())
+		}
 	}
 }

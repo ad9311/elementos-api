@@ -1,14 +1,18 @@
 {{template "index" .}}
 {{define "main"}}
+{{$Category := "asdas"}}
+{{with .Landmark}}
+{{$Category = .Category}}
+{{end}}
 <main>
   <div class="w-4/5 mx-auto mb-20">
     <div class="mt-6 mx-auto max-w-sm p-3 rounded-md border border-stone-200">
       <div class="w-4/5 mx-auto">
         <div class="mb-6">
-          <h2 class="text-2xl">New landmark</h2>
+          {{with .Landmark}}
+          <h2 class="text-2xl">Edit {{.Name}}</h2>
         </div>
         <div>
-          {{with .Landmark}}
           <form id="edit_landmark" action="/landmarks/{{.ID}}" method="post">
             <input type="hidden" name="landmark_id" value="{{.ID}}">
             {{end}}
@@ -25,10 +29,20 @@
               <span class="block italic text-stone-400">Native name</span>
               <input id="native_name" type="text" name="native_name" class="p-2 rounded-md" placeholder="Native name" value="{{.NativeName}}" required/>
             </label>
+            {{end}}
             <label for="category" class="block">
               <span class="block italic text-stone-400">Category</span>
-              <input id="category" type="text" name="category" class="p-2 rounded-md" placeholder="Category" value="{{.Category}}" required/>
+              <select id="category" name="category" class="p-2 rounded-md w-[240px] bg-white text-stone-600 appearance-none" required>
+                {{range .Categories}}
+                {{if eq .Name $Category}}
+                <option value="{{.Name}}" selected>{{.Name}}</option>
+                {{else}}
+                <option value="{{.Name}}">{{.Name}}</option>
+                {{end}}
+                {{end}}
+              </select>
             </label>
+            {{with .Landmark}}
             <label for="description" class="block">
               <span class="block italic text-stone-400">Description</span>
               <textarea id="description" name="description" class="p-2 rounded-md resize-none" rows="5" placeholder="Description" required>{{.Description}}</textarea>

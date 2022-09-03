@@ -26,18 +26,36 @@ type Inviation struct {
 
 // Landmark ...
 type Landmark struct {
-	ID        int64
-	UserID    int64
-	Default   bool
-	CreatedBy string
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID          int64     `json:"-"`
+	UserID      int64     `json:"-"`
+	Default     bool      `json:"-"`
+	CreatedBy   string    `json:"-"`
+	CreatedAt   time.Time `json:"-"`
+	UpdatedAt   time.Time `json:"-"`
+	Name        string    `json:"name"`
+	NativeName  string    `json:"nativeName"`
+	Category    string    `json:"category"`
+	Description string    `json:"description"`
+	WikiURL     string    `json:"wikiURL"`
+	Location    []string  `json:"location"`
+	ImgURLs     []string  `json:"imgURL"`
+}
 
-	Name        string   `json:"name"`
-	NativeName  string   `json:"nativeName"`
-	Category    string   `json:"category"`
-	Description string   `json:"description"`
-	WikiURL     string   `json:"wikiURL"`
-	Location    []string `json:"location"`
-	ImgURLs     []string `json:"imgURL"`
+// ResponseWithData ...
+type ResponseWithData struct {
+	Message string      `json:"message"`
+	Data    interface{} `json:"data"`
+}
+
+// Response ...
+type Response struct {
+	Message string `json:"message"`
+}
+
+// Category ...
+type Category struct {
+	ID        int64     `json:"-"`
+	Name      string    `json:"name"`
+	CreatedAt time.Time `json:"-"`
+	UpdatedAt time.Time `json:"-"`
 }
