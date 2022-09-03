@@ -46,7 +46,7 @@ func (d *Database) SelectLandmarks() ([]Landmark, error) {
 	location := ""
 	imgURLs := ""
 	query := `SELECT landmarks.*,users.username
-	FROM users INNER JOIN landmarks ON users.id=landmarks.user_id;
+	FROM users INNER JOIN landmarks ON users.id=landmarks.user_id ORDER BY landmarks.name;
 	`
 
 	rows, err := d.Conn.QueryContext(ctx, query)

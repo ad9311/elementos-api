@@ -17,12 +17,14 @@ func GetDashboard(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			cnsl.Log(err)
 		}
+
 		appMap := make(map[string]interface{})
 		appMap["CSRFToken"] = nosurf.Token(r)
 		appMap["CurrentUser"] = currentUser(r)
 		appMap["Landmarks"] = landmarks
 		appMap["Alert"] = alert(r)
 		appMap["Notice"] = notice(r)
+
 		if err := render.WriteView(w, "landmarks_index", appMap); err != nil {
 			cnsl.Error(err)
 		}
@@ -34,10 +36,17 @@ func GetDashboard(w http.ResponseWriter, r *http.Request) {
 // GetNewLandmark ...
 func GetNewLandmark(w http.ResponseWriter, r *http.Request) {
 	if session.GetBool(r.Context(), "user_signed_in") {
+		categories, err := database.SelectCategories()
+		if err != nil {
+			cnsl.Log(err)
+		}
+
 		appMap := make(map[string]interface{})
 		appMap["CSRFToken"] = nosurf.Token(r)
 		appMap["CurrentUser"] = currentUser(r)
+		appMap["Categories"] = categories
 		appMap["Alert"] = alert(r)
+
 		if err := render.WriteView(w, "landmarks_new", appMap); err != nil {
 			cnsl.Error(err)
 		}
@@ -77,6 +86,7 @@ func GetShowLandmark(w http.ResponseWriter, r *http.Request) {
 			appMap["Landmark"] = landmark
 			appMap["Alert"] = alert(r)
 			appMap["Notice"] = notice(r)
+
 			if err := render.WriteView(w, "landmarks_show", appMap); err != nil {
 				cnsl.Error(err)
 			}
@@ -93,11 +103,19 @@ func GetEditLandmark(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			cnsl.Log(err)
 		}
+
+		categories, err := database.SelectCategories()
+		if err != nil {
+			cnsl.Log(err)
+		}
+
 		appMap := make(map[string]interface{})
 		appMap["CSRFToken"] = nosurf.Token(r)
 		appMap["CurrentUser"] = currentUser(r)
+		appMap["Categories"] = categories
 		appMap["Landmark"] = landmark
 		appMap["Alert"] = alert(r)
+
 		if err := render.WriteView(w, "landmarks_edit", appMap); err != nil {
 			cnsl.Error(err)
 		}

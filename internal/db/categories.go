@@ -12,7 +12,7 @@ func (d *Database) SelectCategories() ([]Category, error) {
 
 	categories := []Category{}
 	category := Category{}
-	query := `SELECT * FROM categories;`
+	query := `SELECT * FROM categories ORDER BY name;`
 
 	rows, err := d.Conn.QueryContext(ctx, query)
 	if err != nil {
