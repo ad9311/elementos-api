@@ -22,6 +22,7 @@ func GetCategories(w http.ResponseWriter, r *http.Request) {
 		appMap["CurrentUser"] = currentUser(r)
 		appMap["Categories"] = categories
 		appMap["Alert"] = alert(r)
+		appMap["Notice"] = notice(r)
 		if err := render.WriteView(w, "categories_index", appMap); err != nil {
 			cnsl.Error(err)
 		}
@@ -87,6 +88,22 @@ func PostEditCategory(w http.ResponseWriter, r *http.Request) {
 		session.Put(r.Context(), "alert", err.Error())
 		http.Redirect(w, r, "/categories", http.StatusSeeOther)
 	} else {
+		notif := fmt.Sprintf("category %s updated successfully", r.PostFormValue("name"))
+		session.Put(r.Context(), "notice", notif)
+		http.Redirect(w, r, "/categories", http.StatusSeeOther)
+	}
+}
+
+// PostDeleteCategory ...
+func PostDeleteCategory(w http.ResponseWriter, r *http.Request) {
+	err := val.ValidateDeleteCategory(database, r)
+	if err != nil {
+		cnsl.Log(err)
+		session.Put(r.Context(), "alert", err.Error())
+		http.Redirect(w, r, "/categories", http.StatusSeeOther)
+	} else {
+		notif := fmt.Sprintf("category %s deleted", r.PostFormValue("name"))
+		session.Put(r.Context(), "notice", notif)
 		http.Redirect(w, r, "/categories", http.StatusSeeOther)
 	}
 }

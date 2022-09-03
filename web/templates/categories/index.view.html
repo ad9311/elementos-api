@@ -16,8 +16,9 @@
           <li class="mb-3 flex justify-between items-center">
             <h3 class="text-lg mr-2">{{.Name}}</h3>
             <div class="flex items-center">
-              <form action="/categories/{{.ID}}/delete" method="post">
+              <form id="delete_category" action="/categories/{{.ID}}/delete" method="post">
                 <input type="hidden" name="csrf_token" value="{{$CSRFToken}}">
+                <input type="hidden" name="category_id" value="{{.ID}}">
                 <input type="submit" value="Delete" class="mr-2 py-1 px-2 rounded-md bg-red-500 text-white cursor-pointer">
               </form>
               <a href="/categories/{{.ID}}/edit">

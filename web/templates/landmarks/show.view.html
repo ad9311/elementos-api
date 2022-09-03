@@ -44,7 +44,7 @@
             <button type="button" class="py-1 px-2 rounded-md bg-sky-500 text-white">Edit</button>
           </a>
         </div>
-        <form action="/landmarks/{{.ID}}/delete" method="post">
+        <form id="delete_landmark" action="/landmarks/{{.ID}}/delete" method="post">
           <input type="hidden" id="csrf_token" name="csrf_token" value="{{$CSRFToken}}"/>
           <input type="hidden" name="landmark_id" value="{{.ID}}">
           <input type="submit" name="submit" value="Delete" class="py-1 px-2 rounded-md bg-red-500 text-white cursor-pointer">

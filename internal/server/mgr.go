@@ -48,6 +48,7 @@ func managerRoutes(r chi.Router) {
 		r.Route("/{categoryID:[\\d]+}", func(r chi.Router) {
 			r.Get("/edit", ctrl.GetEditCategory)
 			r.Post("/", ctrl.PostEditCategory)
+			r.Post("/delete", ctrl.PostDeleteCategory)
 		})
 	})
 

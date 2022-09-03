@@ -22,6 +22,7 @@ func GetDashboard(w http.ResponseWriter, r *http.Request) {
 		appMap["CurrentUser"] = currentUser(r)
 		appMap["Landmarks"] = landmarks
 		appMap["Alert"] = alert(r)
+		appMap["Notice"] = notice(r)
 		if err := render.WriteView(w, "landmarks_index", appMap); err != nil {
 			cnsl.Error(err)
 		}
@@ -54,7 +55,7 @@ func PostNewLandmark(w http.ResponseWriter, r *http.Request) {
 		session.Put(r.Context(), "alert", err.Error())
 		http.Redirect(w, r, "/landmarks/new", http.StatusSeeOther)
 	} else {
-		notif := fmt.Sprintf("%s created successfully", r.PostFormValue("name"))
+		notif := fmt.Sprintf("landmark %s created successfully", r.PostFormValue("name"))
 		session.Put(r.Context(), "notice", notif)
 		path := fmt.Sprintf("/landmarks/%d", landmark.ID)
 		http.Redirect(w, r, path, http.StatusSeeOther)
@@ -114,6 +115,8 @@ func PostEditLandmark(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, r.URL.String(), http.StatusSeeOther)
 	} else {
 		path := fmt.Sprintf("/landmarks/%s", r.PostFormValue("landmark_id"))
+		notif := fmt.Sprintf("landmark %s updated successfully", r.PostFormValue("name"))
+		session.Put(r.Context(), "notice", notif)
 		http.Redirect(w, r, path, http.StatusSeeOther)
 	}
 }
@@ -124,6 +127,10 @@ func PostDeleteLandmark(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		cnsl.Log(err)
 		session.Put(r.Context(), "alert", err.Error())
+		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+	} else {
+		notif := fmt.Sprintf("landmark %s deleted", r.PostFormValue("name"))
+		session.Put(r.Context(), "notice", notif)
+		http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 	}
-	http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
 }
