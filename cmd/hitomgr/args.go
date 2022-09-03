@@ -18,7 +18,7 @@ func parseArgs() (command, error) {
 			}
 
 			cmd.environment = env
-			cmd.boot = true
+			cmd.load = true
 			cmd.mode = environment
 
 			return cmd, nil

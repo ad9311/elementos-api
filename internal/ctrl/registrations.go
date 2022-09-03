@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/ad9311/hitomgr/internal/cnsl"
 	"github.com/ad9311/hitomgr/internal/render"
 	"github.com/ad9311/hitomgr/internal/val"
 	"github.com/justinas/nosurf"
@@ -19,7 +20,7 @@ func GetSignUp(w http.ResponseWriter, r *http.Request) {
 		appMap["Alert"] = alert(r)
 		appMap["Notice"] = notice(r)
 		if err := render.WriteView(w, "registrations_new", appMap); err != nil {
-			fmt.Println(err)
+			cnsl.Error(err)
 		}
 	}
 }
@@ -28,7 +29,7 @@ func GetSignUp(w http.ResponseWriter, r *http.Request) {
 func PostSignUp(w http.ResponseWriter, r *http.Request) {
 	err := val.ValidateUserSignUp(database, r)
 	if err != nil {
-		fmt.Println(err)
+		cnsl.Log(err)
 		session.Put(r.Context(), "alert", err.Error())
 		http.Redirect(w, r, "/sign_up", http.StatusSeeOther)
 	} else {
