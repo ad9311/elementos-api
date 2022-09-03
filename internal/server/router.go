@@ -34,7 +34,7 @@ func routes() http.Handler {
 	mux.Route("/landmarks", func(r chi.Router) {
 		r.Post("/", ctrl.PostNewLandmark)
 		r.Get("/new", ctrl.GetNewLandmark)
-		r.Route("/{landmarkID}", func(r chi.Router) {
+		r.Route("/{landmarkID:[\\d]+}", func(r chi.Router) {
 			r.Get("/", ctrl.GetShowLandmark)
 			r.Get("/edit", ctrl.GetEditLandmark)
 			r.Post("/", ctrl.PostEditLandmark)

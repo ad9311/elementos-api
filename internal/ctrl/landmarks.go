@@ -53,6 +53,8 @@ func PostNewLandmark(w http.ResponseWriter, r *http.Request) {
 		session.Put(r.Context(), "alert", err.Error())
 		http.Redirect(w, r, "/landmarks/new", http.StatusSeeOther)
 	} else {
+		notif := fmt.Sprintf("%s created successfully", r.PostFormValue("name"))
+		session.Put(r.Context(), "notice", notif)
 		path := fmt.Sprintf("/landmarks/%d", landmark.ID)
 		http.Redirect(w, r, path, http.StatusSeeOther)
 	}
@@ -64,15 +66,18 @@ func GetShowLandmark(w http.ResponseWriter, r *http.Request) {
 		landmark, err := val.ValidateShowLandmark(database, r.URL.String())
 		if err != nil {
 			fmt.Println(err)
+			session.Put(r.Context(), "alert", err.Error())
 			http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
-		}
-		appMap := make(map[string]interface{})
-		appMap["CSRFToken"] = nosurf.Token(r)
-		appMap["CurrentUser"] = currentUser(r)
-		appMap["Landmark"] = landmark
-		appMap["Alert"] = alert(r)
-		if err := render.WriteView(w, "landmarks_show", appMap); err != nil {
-			fmt.Println(err)
+		} else {
+			appMap := make(map[string]interface{})
+			appMap["CSRFToken"] = nosurf.Token(r)
+			appMap["CurrentUser"] = currentUser(r)
+			appMap["Landmark"] = landmark
+			appMap["Alert"] = alert(r)
+			appMap["Notice"] = notice(r)
+			if err := render.WriteView(w, "landmarks_show", appMap); err != nil {
+				fmt.Println(err)
+			}
 		}
 	} else {
 		http.Redirect(w, r, "/sign_in", http.StatusSeeOther)
