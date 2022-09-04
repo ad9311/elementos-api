@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/ad9311/hitomgr/internal/apictrl"
+	"github.com/ad9311/hitomgr/internal/api/apiv1"
 	"github.com/ad9311/hitomgr/internal/cfg"
 	"github.com/ad9311/hitomgr/internal/cnsl"
 	"github.com/ad9311/hitomgr/internal/ctrl"
@@ -53,7 +53,7 @@ func main() {
 
 			session := server.SetUp(config.ServerPort, config.SeverSecure)
 			ctrl.SetUp(database, session)
-			apictrl.Setup(database)
+			apiv1.Setup(database)
 
 			cnsl.ServerInfo(cmd.environment, config.ServerPort)
 			cnsl.Error(server.New().ListenAndServe())

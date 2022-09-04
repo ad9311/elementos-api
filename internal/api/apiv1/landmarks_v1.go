@@ -1,4 +1,4 @@
-package apictrl
+package apiv1
 
 import (
 	"encoding/json"
