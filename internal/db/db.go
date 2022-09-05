@@ -2,6 +2,7 @@ package db
 
 import (
 	"database/sql"
+	"fmt"
 	"strings"
 	"time"
 
@@ -50,4 +51,41 @@ func pgArrayToSlice(pgArr string) []string {
 	slice := strings.Split(pgArr, ",")
 
 	return slice
+}
+
+func parseLandmarkQueries(urlQueries map[string]string) (string, error) {
+	query := `SELECT landmarks.*,users.username
+	FROM users INNER JOIN landmarks ON users.id=landmarks.user_id
+	`
+
+	first := true
+	for k, v := range urlQueries {
+		if strings.Contains(k, "sel_") {
+			if first {
+				query += " WHERE "
+				first = false
+			} else {
+				query += " AND "
+			}
+
+			if strings.Contains(k, "sel_arr_") {
+				query += fmt.Sprintf("'%s'=ANY(landmarks.%s)", v, strings.Split(k, "sel_arr_")[1])
+			} else {
+				query += fmt.Sprintf("landmarks.%s='%s'", strings.Split(k, "sel_")[1], v)
+			}
+		}
+	}
+
+	if v, ok := urlQueries["ord_order_by"]; ok {
+		query += fmt.Sprintf(" ORDER BY landmarks.%s", v)
+		if _, ok := urlQueries["ord_desc"]; ok {
+			query += " DESC"
+		}
+	} else {
+		if _, ok := urlQueries["ord_desc"]; ok {
+			return query, fmt.Errorf("order_by query is missing")
+		}
+	}
+
+	return query + ";", nil
 }

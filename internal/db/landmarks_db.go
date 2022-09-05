@@ -204,3 +204,51 @@ func (d *Database) DeleteLandmark(id int64) error {
 
 	return nil
 }
+
+// SelectLandmarksWithQueries ...
+func (d *Database) SelectLandmarksWithQueries(urlQueries map[string]string) ([]Landmark, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	landmarks := []Landmark{}
+	landmark := Landmark{}
+	location := ""
+	imgURLs := ""
+	query, err := parseLandmarkQueries(urlQueries)
+	if err != nil {
+		return landmarks, err
+	}
+
+	rows, err := d.Conn.QueryContext(ctx, query)
+	defer rows.Close()
+	if err != nil {
+		return landmarks, err
+	}
+
+	for rows.Next() {
+		err := rows.Scan(
+			&landmark.ID,
+			&landmark.Name,
+			&landmark.NativeName,
+			&landmark.Category,
+			&landmark.Description,
+			&landmark.WikiURL,
+			&location,
+			&imgURLs,
+			&landmark.Default,
+			&landmark.UserID,
+			&landmark.CreatedAt,
+			&landmark.UpdatedAt,
+			&landmark.CreatedBy,
+		)
+		if err != nil {
+			return landmarks, err
+		}
+
+		landmark.Location = pgArrayToSlice(location)
+		landmark.ImgURLs = pgArrayToSlice(imgURLs)
+		landmarks = append(landmarks, landmark)
+	}
+
+	return landmarks, nil
+}
