@@ -126,3 +126,37 @@ func ValidateDeleteLandmark(dtbs *db.Database, r *http.Request) error {
 
 	return err
 }
+
+// ValidateGetLandmarks ...
+func ValidateGetLandmarks(dbts *db.Database, r *http.Request) ([]db.Landmark, error) {
+	permitted := map[string]string{
+		"category":    "",
+		"location":    "",
+		"name":        "",
+		"native_name": "",
+		"order_by":    "",
+		"asc":         "",
+		"desc":        "",
+	}
+
+	if r.URL.RawQuery != "" {
+		urlQueries, err := checkURLQueries(r.URL.Query().Encode(), permitted)
+		if err != nil {
+			return []db.Landmark{}, err
+		}
+
+		landmarks, err := dbts.SelectLandmarksWithQueries(urlQueries)
+		if err != nil {
+			return []db.Landmark{}, err
+		}
+
+		return landmarks, nil
+	}
+
+	landmarks, err := dbts.SelectLandmarks()
+	if err != nil {
+		return []db.Landmark{}, err
+	}
+
+	return landmarks, nil
+}

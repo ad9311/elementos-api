@@ -68,7 +68,7 @@ func Log(data interface{}) {
 // Debug ...
 func Debug(data interface{}) {
 	message := fmt.Sprintf(
-		"\n%s[%s]: DEBUG:%s %s\n",
+		"%s[%s]: DEBUG:%s %s",
 		colorYellow,
 		time.Now().Format("2006-01-02 15:04:05"),
 		colorReset,
