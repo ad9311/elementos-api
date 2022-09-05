@@ -252,3 +252,26 @@ func (d *Database) SelectLandmarksWithQueries(urlQueries map[string]string) ([]L
 
 	return landmarks, nil
 }
+
+// UpdateLandmarksCategory ...
+func (d *Database) UpdateLandmarksCategory(newCategory string, oldCategory string) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := `UPDATE landmarks SET category=$1, updated_at=$2
+	WHERE category=$3;
+	`
+
+	_, err := d.Conn.ExecContext(
+		ctx,
+		query,
+		newCategory,
+		time.Now(),
+		oldCategory,
+	)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

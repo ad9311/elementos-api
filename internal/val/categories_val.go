@@ -61,7 +61,16 @@ func ValidateEditCategory(dtbs *db.Database, r *http.Request) error {
 		)
 	}
 
+	category, err := dtbs.SelectCategory(id)
+	if err != nil {
+		return err
+	}
+
 	if err := dtbs.UpdateCategory(formMap); err != nil {
+		return err
+	}
+
+	if err := dtbs.UpdateLandmarksCategory(formMap["name"], category.Name); err != nil {
 		return err
 	}
 
