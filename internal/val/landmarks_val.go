@@ -139,12 +139,21 @@ func ValidateGetLandmarks(dbts *db.Database, r *http.Request) ([]db.Landmark, er
 		"desc":        "",
 	}
 
-	urlQueries, err := checkURLQueries(r.URL.Query().Encode(), permitted)
-	if err != nil {
-		return []db.Landmark{}, err
+	if r.URL.RawQuery != "" {
+		urlQueries, err := checkURLQueries(r.URL.Query().Encode(), permitted)
+		if err != nil {
+			return []db.Landmark{}, err
+		}
+
+		landmarks, err := dbts.SelectLandmarksWithQueries(urlQueries)
+		if err != nil {
+			return []db.Landmark{}, err
+		}
+
+		return landmarks, nil
 	}
 
-	landmarks, err := dbts.SelectLandmarksWithQueries(urlQueries)
+	landmarks, err := dbts.SelectLandmarks()
 	if err != nil {
 		return []db.Landmark{}, err
 	}
