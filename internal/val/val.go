@@ -104,3 +104,33 @@ func checkUserID(formUserID string, userID int64) error {
 
 	return nil
 }
+
+func checkURLQueries(queries string, permitted map[string]string) (map[string]string, error) {
+	cleanQueries := make(map[string]string)
+	for _, v := range strings.Split(queries, "&") {
+		query := strings.Split(v, "=")
+		queryVal := strings.ReplaceAll(query[1], "+", " ")
+
+		if _, ok := permitted[query[0]]; ok {
+			switch query[0] {
+			case "order_by":
+				cleanQueries["ord_"+query[0]] = queryVal
+				break
+			case "desc":
+				cleanQueries["ord_"+query[0]] = queryVal
+				break
+			case "asc":
+				break
+			case "location":
+				cleanQueries["sel_arr_"+query[0]] = queryVal
+			default:
+				cleanQueries["sel_"+query[0]] = queryVal
+				break
+			}
+		} else {
+			return cleanQueries, fmt.Errorf("parameter \"%s\" unrecognized or not permitted", query[0])
+		}
+	}
+
+	return cleanQueries, nil
+}
