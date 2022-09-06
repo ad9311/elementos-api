@@ -38,8 +38,8 @@ func (d *Database) SelectCategories() ([]Category, error) {
 	return categories, nil
 }
 
-// SelectCategory ...
-func (d *Database) SelectCategory(id int64) (Category, error) {
+// SelectCategoryByID ...
+func (d *Database) SelectCategoryByID(id int64) (Category, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
@@ -47,6 +47,28 @@ func (d *Database) SelectCategory(id int64) (Category, error) {
 	query := `SELECT * FROM categories WHERE id=$1`
 
 	row := d.Conn.QueryRowContext(ctx, query, id)
+	err := row.Scan(
+		&category.ID,
+		&category.Name,
+		&category.CreatedAt,
+		&category.UpdatedAt,
+	)
+	if err != nil {
+		return category, err
+	}
+
+	return category, nil
+}
+
+// SelectCategoryByName ...
+func (d *Database) SelectCategoryByName(name string) (Category, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	category := Category{}
+	query := `SELECT * FROM categories WHERE name=$1`
+
+	row := d.Conn.QueryRowContext(ctx, query, name)
 	err := row.Scan(
 		&category.ID,
 		&category.Name,

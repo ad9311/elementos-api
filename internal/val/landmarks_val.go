@@ -13,7 +13,7 @@ func ValidateNewLandmark(dtbs *db.Database, r *http.Request, userID int64) (db.L
 		"user_id",
 		"name",
 		"native_name",
-		"category",
+		"category_id",
 		"description",
 		"wiki_url",
 		"location",
@@ -52,12 +52,12 @@ func ValidateShowLandmark(dtbs *db.Database, urlStr string) (db.Landmark, error)
 		return db.Landmark{}, err
 	}
 
-	lm, err := dtbs.SelectLandmarkByID(i)
+	landmark, err := dtbs.SelectLandmarkByID(i)
 	if err != nil {
 		return db.Landmark{}, err
 	}
 
-	return lm, nil
+	return landmark, nil
 }
 
 // ValidateEditLandmark ...
@@ -71,7 +71,7 @@ func ValidateEditLandmark(dtbs *db.Database, r *http.Request) error {
 		"landmark_id",
 		"name",
 		"native_name",
-		"category",
+		"category_id",
 		"description",
 		"wiki_url",
 		"location",

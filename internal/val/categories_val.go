@@ -31,7 +31,7 @@ func ValidateShowCategory(dtbs *db.Database, urlStr string) (db.Category, error)
 		return db.Category{}, err
 	}
 
-	cat, err := dtbs.SelectCategory(i)
+	cat, err := dtbs.SelectCategoryByID(i)
 	if err != nil {
 		return db.Category{}, err
 	}
@@ -61,16 +61,7 @@ func ValidateEditCategory(dtbs *db.Database, r *http.Request) error {
 		)
 	}
 
-	category, err := dtbs.SelectCategory(id)
-	if err != nil {
-		return err
-	}
-
 	if err := dtbs.UpdateCategory(formMap); err != nil {
-		return err
-	}
-
-	if err := dtbs.UpdateLandmarksCategory(formMap["name"], category.Name); err != nil {
 		return err
 	}
 

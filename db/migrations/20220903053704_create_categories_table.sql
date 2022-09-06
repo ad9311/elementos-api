@@ -8,4 +8,4 @@ CREATE TABLE IF NOT EXISTS categories (
 
 
 -- migrate:down
-DROP TABLE IF EXISTS categories; 
+DROP TABLE IF EXISTS categories;
