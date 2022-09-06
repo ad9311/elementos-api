@@ -251,7 +251,9 @@ func (d *Database) SelectLandmarksWithQueries(urlQueries map[string]string) ([]L
 			&landmark.UserID,
 			&landmark.CreatedAt,
 			&landmark.UpdatedAt,
+			&landmark.CategoryID,
 			&landmark.CreatedBy,
+			&landmark.Category,
 		)
 		if err != nil {
 			return landmarks, err

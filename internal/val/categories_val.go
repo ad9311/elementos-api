@@ -31,7 +31,7 @@ func ValidateShowCategory(dtbs *db.Database, urlStr string) (db.Category, error)
 		return db.Category{}, err
 	}
 
-	cat, err := dtbs.SelectCategory(i)
+	cat, err := dtbs.SelectCategoryByID(i)
 	if err != nil {
 		return db.Category{}, err
 	}

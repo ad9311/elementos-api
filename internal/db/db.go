@@ -66,6 +66,8 @@ func parseLandmarkQueries(baseQuery string, urlQueries map[string]string) (strin
 
 			if strings.Contains(k, "sel_arr_") {
 				baseQuery += fmt.Sprintf("'%s'=ANY(landmarks.%s)", v, strings.Split(k, "sel_arr_")[1])
+			} else if strings.Contains(k, "category") {
+				baseQuery += fmt.Sprintf("categories.name='%s'", v)
 			} else {
 				baseQuery += fmt.Sprintf("landmarks.%s='%s'", strings.Split(k, "sel_")[1], v)
 			}
