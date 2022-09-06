@@ -8,14 +8,14 @@ CREATE TABLE IF NOT EXISTS landmarks (
   wiki_url TEXT NOT NULL,
   "location" TEXT [] NOT NULL,
   "img_urls" TEXT [] NOT NULL,
-  default_landmark BOOLEAN NOT NULL DEFAULT false, 
+  default_landmark BOOLEAN NOT NULL DEFAULT false,
   "user_id" INT NOT NULL DEFAULT 1,
 	created_at TIMESTAMPTZ NOT NULL,
   updated_at TIMESTAMPTZ NOT NULL,
   CONSTRAINT user_id_fk
-  FOREIGN KEY(user_id) 
+  FOREIGN KEY(user_id)
 	REFERENCES users(id) ON DELETE SET DEFAULT ON UPDATE CASCADE
 );
 
 -- migrate:down
-DROP TABLE IF EXISTS landmarks; 
+DROP TABLE IF EXISTS landmarks;

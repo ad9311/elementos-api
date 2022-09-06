@@ -86,7 +86,6 @@ CREATE TABLE public.landmarks (
     id integer NOT NULL,
     name character varying(60) NOT NULL,
     native_name character varying(60) NOT NULL,
-    category character varying(60) NOT NULL,
     description text NOT NULL,
     wiki_url text NOT NULL,
     location text[] NOT NULL,
@@ -94,7 +93,8 @@ CREATE TABLE public.landmarks (
     default_landmark boolean DEFAULT false NOT NULL,
     user_id integer DEFAULT 1 NOT NULL,
     created_at timestamp with time zone NOT NULL,
-    updated_at timestamp with time zone NOT NULL
+    updated_at timestamp with time zone NOT NULL,
+    category_id integer DEFAULT 1 NOT NULL
 );
 
 
@@ -201,6 +201,14 @@ ALTER TABLE ONLY public.categories
 
 
 --
+-- Name: categories categories_username_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.categories
+    ADD CONSTRAINT categories_username_key UNIQUE (name);
+
+
+--
 -- Name: invitations invitations_code_key; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -265,6 +273,14 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: landmarks category_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.landmarks
+    ADD CONSTRAINT category_id_fk FOREIGN KEY (category_id) REFERENCES public.categories(id) ON UPDATE CASCADE ON DELETE SET DEFAULT;
+
+
+--
 -- Name: landmarks user_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -285,4 +301,7 @@ INSERT INTO public.schema_migrations (version) VALUES
     ('20220826145216'),
     ('20220826171100'),
     ('20220826213407'),
-    ('20220903053704');
+    ('20220903053704'),
+    ('20220905232123'),
+    ('20220906005702'),
+    ('20220906011225');

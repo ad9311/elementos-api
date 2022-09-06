@@ -28,6 +28,7 @@ type Inviation struct {
 type Landmark struct {
 	ID          int64     `json:"-"`
 	UserID      int64     `json:"-"`
+	CategoryID  int64     `json:"-"`
 	Default     bool      `json:"-"`
 	CreatedBy   string    `json:"-"`
 	CreatedAt   time.Time `json:"-"`
