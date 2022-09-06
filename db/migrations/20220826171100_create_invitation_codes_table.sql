@@ -8,4 +8,4 @@ CREATE TABLE IF NOT EXISTS invitations (
 );
 
 -- migrate:down
-DROP TABLE IF EXISTS invitations; 
+DROP TABLE IF EXISTS invitations;
