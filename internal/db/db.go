@@ -53,39 +53,35 @@ func pgArrayToSlice(pgArr string) []string {
 	return slice
 }
 
-func parseLandmarkQueries(urlQueries map[string]string) (string, error) {
-	query := `SELECT landmarks.*,users.username
-	FROM users INNER JOIN landmarks ON users.id=landmarks.user_id
-	`
-
+func parseLandmarkQueries(baseQuery string, urlQueries map[string]string) (string, error) {
 	first := true
 	for k, v := range urlQueries {
 		if strings.Contains(k, "sel_") {
 			if first {
-				query += " WHERE "
+				baseQuery += " WHERE "
 				first = false
 			} else {
-				query += " AND "
+				baseQuery += " AND "
 			}
 
 			if strings.Contains(k, "sel_arr_") {
-				query += fmt.Sprintf("'%s'=ANY(landmarks.%s)", v, strings.Split(k, "sel_arr_")[1])
+				baseQuery += fmt.Sprintf("'%s'=ANY(landmarks.%s)", v, strings.Split(k, "sel_arr_")[1])
 			} else {
-				query += fmt.Sprintf("landmarks.%s='%s'", strings.Split(k, "sel_")[1], v)
+				baseQuery += fmt.Sprintf("landmarks.%s='%s'", strings.Split(k, "sel_")[1], v)
 			}
 		}
 	}
 
 	if v, ok := urlQueries["ord_order_by"]; ok {
-		query += fmt.Sprintf(" ORDER BY landmarks.%s", v)
+		baseQuery += fmt.Sprintf(" ORDER BY landmarks.%s", v)
 		if _, ok := urlQueries["ord_desc"]; ok {
-			query += " DESC"
+			baseQuery += " DESC"
 		}
 	} else {
 		if _, ok := urlQueries["ord_desc"]; ok {
-			return query, fmt.Errorf("order_by query is missing")
+			return baseQuery, fmt.Errorf("order_by baseQuery is missing")
 		}
 	}
 
-	return query + ";", nil
+	return baseQuery + ";", nil
 }

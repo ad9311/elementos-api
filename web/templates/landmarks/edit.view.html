@@ -30,14 +30,14 @@
               <input id="native_name" type="text" name="native_name" class="p-2 rounded-md" placeholder="Native name" value="{{.NativeName}}" required/>
             </label>
             {{end}}
-            <label for="category" class="block">
+            <label for="category_id" class="block">
               <span class="block italic text-stone-400">Category</span>
-              <select id="category" name="category" class="p-2 rounded-md w-[240px] bg-white text-stone-600 appearance-none" required>
+              <select id="category_id" name="category_id" class="p-2 rounded-md w-[240px] bg-white text-stone-600 appearance-none" required>
                 {{range .Categories}}
                 {{if eq .Name $Category}}
-                <option value="{{.Name}}" selected>{{.Name}}</option>
+                <option value="{{.ID}}" selected>{{.Name}}</option>
                 {{else}}
-                <option value="{{.Name}}">{{.Name}}</option>
+                <option value="{{.ID}}">{{.Name}}</option>
                 {{end}}
                 {{end}}
               </select>

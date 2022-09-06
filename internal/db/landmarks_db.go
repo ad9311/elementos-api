@@ -11,8 +11,8 @@ func (d *Database) InsertLandmark(formMap map[string]string) error {
 	defer cancel()
 
 	query := `INSERT INTO landmarks
-	(name,native_name,category,description,wiki_url,
-	location,img_urls,user_id,created_at,updated_at)
+	(name,native_name,description,wiki_url,
+	location,img_urls,user_id,category_id,created_at,updated_at)
 	values ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10);
 	`
 	_, err := d.Conn.ExecContext(
@@ -20,12 +20,12 @@ func (d *Database) InsertLandmark(formMap map[string]string) error {
 		query,
 		formMap["name"],
 		formMap["native_name"],
-		formMap["category"],
 		formMap["description"],
 		formMap["wiki_url"],
 		formMap["location"],
 		formMap["img_urls"],
 		formMap["user_id"],
+		formMap["category_id"],
 		time.Now(),
 		time.Now(),
 	)
@@ -45,8 +45,9 @@ func (d *Database) SelectLandmarks() ([]Landmark, error) {
 	landmark := Landmark{}
 	location := ""
 	imgURLs := ""
-	query := `SELECT landmarks.*,users.username
-	FROM users INNER JOIN landmarks ON users.id=landmarks.user_id ORDER BY landmarks.name;
+	query := `SELECT landmarks.*,users.username,categories.name FROM landmarks
+	LEFT JOIN users ON users.id=landmarks.user_id
+	LEFT JOIN categories ON categories.id=landmarks.category_id ORDER BY landmarks.name;
 	`
 
 	rows, err := d.Conn.QueryContext(ctx, query)
@@ -60,7 +61,6 @@ func (d *Database) SelectLandmarks() ([]Landmark, error) {
 			&landmark.ID,
 			&landmark.Name,
 			&landmark.NativeName,
-			&landmark.Category,
 			&landmark.Description,
 			&landmark.WikiURL,
 			&location,
@@ -69,7 +69,9 @@ func (d *Database) SelectLandmarks() ([]Landmark, error) {
 			&landmark.UserID,
 			&landmark.CreatedAt,
 			&landmark.UpdatedAt,
+			&landmark.CategoryID,
 			&landmark.CreatedBy,
+			&landmark.Category,
 		)
 		if err != nil {
 			rows.Close()
@@ -93,8 +95,10 @@ func (d *Database) SelectLandmarkByID(id int64) (Landmark, error) {
 	landmark := Landmark{}
 	location := ""
 	imgURLs := ""
-	query := `SELECT landmarks.*,users.username
-	FROM landmarks RIGHT JOIN users ON users.id=landmarks.user_id WHERE landmarks.id=$1;
+	query := `SELECT landmarks.*,users.username,categories.name FROM landmarks
+	LEFT JOIN users ON users.id=landmarks.user_id
+	LEFT JOIN categories ON categories.id=landmarks.category_id
+	WHERE landmarks.id=$1;
 	`
 
 	row := d.Conn.QueryRowContext(ctx, query, id)
@@ -102,7 +106,6 @@ func (d *Database) SelectLandmarkByID(id int64) (Landmark, error) {
 		&landmark.ID,
 		&landmark.Name,
 		&landmark.NativeName,
-		&landmark.Category,
 		&landmark.Description,
 		&landmark.WikiURL,
 		&location,
@@ -111,7 +114,9 @@ func (d *Database) SelectLandmarkByID(id int64) (Landmark, error) {
 		&landmark.UserID,
 		&landmark.CreatedAt,
 		&landmark.UpdatedAt,
+		&landmark.CategoryID,
 		&landmark.CreatedBy,
+		&landmark.Category,
 	)
 	if err != nil {
 		return landmark, err
@@ -131,8 +136,10 @@ func (d *Database) SelectLandmarkByName(name string) (Landmark, error) {
 	landmark := Landmark{}
 	location := ""
 	imgURLs := ""
-	query := `SELECT landmarks.*,users.username
-	FROM landmarks RIGHT JOIN users ON users.id=landmarks.user_id WHERE landmarks.name=$1;
+	query := `SELECT landmarks.*,users.username,categories.name FROM landmarks
+	LEFT JOIN users ON users.id=landmarks.user_id
+	LEFT JOIN categories ON categories.id=landmarks.category_id
+	WHERE landmarks.name=$1;
 	`
 
 	row := d.Conn.QueryRowContext(ctx, query, name)
@@ -140,7 +147,6 @@ func (d *Database) SelectLandmarkByName(name string) (Landmark, error) {
 		&landmark.ID,
 		&landmark.Name,
 		&landmark.NativeName,
-		&landmark.Category,
 		&landmark.Description,
 		&landmark.WikiURL,
 		&location,
@@ -149,7 +155,9 @@ func (d *Database) SelectLandmarkByName(name string) (Landmark, error) {
 		&landmark.UserID,
 		&landmark.CreatedAt,
 		&landmark.UpdatedAt,
+		&landmark.CategoryID,
 		&landmark.CreatedBy,
+		&landmark.Category,
 	)
 	if err != nil {
 		return landmark, err
@@ -166,8 +174,8 @@ func (d *Database) UpdateLandmark(formMap map[string]string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	query := `UPDATE landmarks SET name=$1,native_name=$2,category=$3,description=$4,wiki_url=$5,
-	location=$6,img_urls=$7,updated_at=$8 WHERE id=$9;
+	query := `UPDATE landmarks SET name=$1,native_name=$2,description=$3,wiki_url=$4,
+	location=$5,img_urls=$6,category_id=$7,updated_at=$8 WHERE id=$9;
 	`
 
 	_, err := d.Conn.ExecContext(
@@ -175,11 +183,11 @@ func (d *Database) UpdateLandmark(formMap map[string]string) error {
 		query,
 		formMap["name"],
 		formMap["native_name"],
-		formMap["category"],
 		formMap["description"],
 		formMap["wiki_url"],
 		formMap["location"],
 		formMap["img_urls"],
+		formMap["category_id"],
 		time.Now(),
 		formMap["landmark_id"],
 	)
@@ -214,7 +222,12 @@ func (d *Database) SelectLandmarksWithQueries(urlQueries map[string]string) ([]L
 	landmark := Landmark{}
 	location := ""
 	imgURLs := ""
-	query, err := parseLandmarkQueries(urlQueries)
+	baseQuery := `SELECT landmarks.*,users.username,categories.name FROM landmarks
+	LEFT JOIN users ON users.id=landmarks.user_id
+	LEFT JOIN categories ON categories.id=landmarks.category_id
+	`
+
+	query, err := parseLandmarkQueries(baseQuery, urlQueries)
 	if err != nil {
 		return landmarks, err
 	}
@@ -230,7 +243,6 @@ func (d *Database) SelectLandmarksWithQueries(urlQueries map[string]string) ([]L
 			&landmark.ID,
 			&landmark.Name,
 			&landmark.NativeName,
-			&landmark.Category,
 			&landmark.Description,
 			&landmark.WikiURL,
 			&location,
@@ -251,27 +263,4 @@ func (d *Database) SelectLandmarksWithQueries(urlQueries map[string]string) ([]L
 	}
 
 	return landmarks, nil
-}
-
-// UpdateLandmarksCategory ...
-func (d *Database) UpdateLandmarksCategory(newCategory string, oldCategory string) error {
-	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
-	defer cancel()
-
-	query := `UPDATE landmarks SET category=$1, updated_at=$2
-	WHERE category=$3;
-	`
-
-	_, err := d.Conn.ExecContext(
-		ctx,
-		query,
-		newCategory,
-		time.Now(),
-		oldCategory,
-	)
-	if err != nil {
-		return err
-	}
-
-	return nil
 }

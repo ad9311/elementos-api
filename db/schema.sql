@@ -86,7 +86,6 @@ CREATE TABLE public.landmarks (
     id integer NOT NULL,
     name character varying(60) NOT NULL,
     native_name character varying(60) NOT NULL,
-    category character varying(60) NOT NULL,
     description text NOT NULL,
     wiki_url text NOT NULL,
     location text[] NOT NULL,
@@ -304,4 +303,5 @@ INSERT INTO public.schema_migrations (version) VALUES
     ('20220826213407'),
     ('20220903053704'),
     ('20220905232123'),
-    ('20220906005702');
+    ('20220906005702'),
+    ('20220906011225');
